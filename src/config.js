@@ -44,8 +44,8 @@ export const SHATTER = {
   orbRadius: 0.1558, // MEASURED
   orbitRadius: 1.13806, // MEASURED — circle in the Y/Z plane, x = 0
   orbitStart: 0.941, // MEASURED — radians, matches Blender frame 1
-  orbitTurns: 1.35, // TASTE — how far the orb travels over a full page scroll
-  burst: 1.9, // TASTE — extra outward push of the shards as you scroll away
+  orbitTurns: 2.1, // TASTE — how far the orb travels over a full page scroll
+  burst: 1.5, // TASTE — extra outward push of the shards as you scroll away
 }
 
 // ── The display type (§3.2 / §3.7) ────────────────────────────────────────────
@@ -67,8 +67,12 @@ export const TYPE = {
 // ── Scroll ────────────────────────────────────────────────────────────────────
 export const SCROLL = {
   lerp: 0.09,
-  // how far the camera drifts as you scroll the whole page — this is the parallax
-  // that carries from the hero into the lower sections (§6 answer 1a)
-  cameraDrift: [0, -1.6, -3.4],
-  subjectDrift: [0, 0.55, 0],
+  // The parallax that carries from the hero into the lower sections (§6 answer 1a).
+  //
+  // Now that the page is a full portfolio (§13) rather than one screen, the subject
+  // has to get OUT OF THE WAY: content sits in a column on the left, so the sphere
+  // drifts right and back as you scroll. The panels carry their own scrim too —
+  // both are needed, the drift alone is not enough behind long body copy.
+  cameraDrift: [0, -0.9, -1.8],
+  subjectDrift: [2.7, 0.8, -1.4],
 }

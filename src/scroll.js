@@ -36,3 +36,14 @@ export function startScroll() {
     lenis = null
   }
 }
+
+/**
+ * Anchor navigation has to go through Lenis — it hijacks the scroll position, so a
+ * plain `href="#work"` jump fights it and lands in the wrong place.
+ */
+export function scrollToSection(hash) {
+  const el = typeof hash === 'string' ? document.querySelector(hash) : hash
+  if (!el) return
+  if (lenis) lenis.scrollTo(el, { offset: -12 })
+  else el.scrollIntoView({ behavior: 'smooth' })
+}

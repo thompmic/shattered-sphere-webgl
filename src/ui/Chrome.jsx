@@ -1,103 +1,136 @@
+import { useState } from 'react'
 import { content } from '../content.js'
+import { scrollToSection } from '../scroll.js'
+import { Todo } from './Todo.jsx'
 
 /**
- * The DOM layer that sits over the canvas (§3.7 layer 6), arranged per the
- * structural beats in §3.7b: logo left, links centred, CTA right; stats bottom-left;
- * social cluster bottom-right; the frosted rail on the right edge (§3.3).
- *
- * All copy comes from content.js — see §6 answer 5.
+ * The fixed chrome over the canvas: the nav and the hero copy.
+ * Scrolling page content lives in Sections.jsx.
  */
 
-function Logo() {
+function Mark() {
   return (
-    <a className="logo" href="#top" aria-label={`${content.brand.line1} ${content.brand.line2}`}>
-      {/* the `icon` Union vector from §3.2, rebuilt as a mark */}
-      <svg viewBox="0 0 50 50" width="34" height="34" aria-hidden="true">
-        <path
-          d="M25 3 L45 15 V35 L25 47 L5 35 V15 Z"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
-        />
-        <circle cx="25" cy="25" r="7.5" fill="currentColor" />
-      </svg>
-      <span className="logo-word">
-        {content.brand.line1}
-        <br />
-        {content.brand.line2}
-      </span>
+    <svg viewBox="0 0 50 50" width="30" height="30" aria-hidden="true">
+      <path d="M25 3 L45 15 V35 L25 47 L5 35 V15 Z" fill="none" stroke="currentColor" strokeWidth="2.2" />
+      <circle cx="25" cy="25" r="7.5" fill="currentColor" />
+    </svg>
+  )
+}
+
+/** Anchor that routes through Lenis instead of the browser's native jump. */
+export function SectionLink({ href, children, className, onNavigate }) {
+  return (
+    <a
+      href={href}
+      className={className}
+      onClick={(e) => {
+        if (href?.startsWith('#')) {
+          e.preventDefault()
+          scrollToSection(href)
+          onNavigate?.()
+        }
+      }}
+    >
+      {children}
     </a>
   )
 }
 
 export function Nav() {
+  const [open, setOpen] = useState(false)
+  const { identity, nav, cta } = content
+
   return (
-    <header className="nav">
-      <Logo />
-      <nav className="nav-links">
-        {content.nav.map((item) => (
-          <a key={item.label} href={item.href}>
+    <header className="nav" data-open={open}>
+      <SectionLink href="#top" className="logo" onNavigate={() => setOpen(false)}>
+        <Mark />
+        <span className="logo-word">
+          <strong>{identity.name}</strong>
+          <em>
+            {identity.role}
+            {identity.roleTodo ? <Todo /> : null}
+          </em>
+        </span>
+      </SectionLink>
+
+      <button
+        className="nav-toggle"
+        aria-expanded={open}
+        aria-controls="site-nav"
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span aria-hidden="true">{open ? '✕' : '☰'}</span>
+        <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
+      </button>
+
+      <nav className="nav-links" id="site-nav">
+        {nav.map((item) => (
+          <SectionLink key={item.label} href={item.href} onNavigate={() => setOpen(false)}>
             {item.label}
-          </a>
+          </SectionLink>
         ))}
       </nav>
-      <a className="cta" href={content.cta.href}>
-        {content.cta.label}
-      </a>
+
+      <SectionLink href={cta.href} className="cta" onNavigate={() => setOpen(false)}>
+        {cta.label}
+      </SectionLink>
     </header>
   )
 }
 
 export function HeroCopy() {
-  const { tagline, eyebrow, kicker } = content.hero
+  const { identity, hero } = content
   return (
     <>
-      <div className="hero-tagline">
-        {tagline.map((line) => (
+      <div className="hero-intro">
+        {hero.intro.map((line) => (
           <span key={line}>{line}</span>
         ))}
+        {hero.introTodo ? <Todo /> : null}
       </div>
 
-      <div className="hero-stats">
-        <div className="stat">
-          <p className="stat-title">{eyebrow.title}</p>
-          <p className="stat-sub">{eyebrow.sub}</p>
+      <div className="hero-foot">
+        <div className="hero-id">
+          <p className="hero-name">{identity.name}</p>
+          <p className="hero-tagline">
+            {identity.tagline}
+            {identity.taglineTodo ? <Todo /> : null}
+          </p>
         </div>
-        <p className="hero-kicker">{kicker}</p>
+        <SectionLink href="#work" className="scroll-hint">
+          <span>{hero.scrollHint}</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path d="M12 4 V19 M6 13 L12 19 L18 13" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          </svg>
+        </SectionLink>
       </div>
     </>
   )
 }
 
+/** The frosted right rail (§3.3) — social cluster + contact shortcut. */
 export function RightRail() {
   return (
-    <aside className="rail" aria-label="Contact">
-      <a className="rail-cta" href={content.cta.href}>
+    <aside className="rail" aria-label="Elsewhere">
+      <SectionLink href="#contact" className="rail-cta">
         {content.cta.label}
-      </a>
+      </SectionLink>
       <ul className="rail-social">
         {content.social.map((s) => (
           <li key={s.label}>
-            <a href={s.href} aria-label={s.label}>
-              <span aria-hidden="true">{s.label[0]}</span>
-            </a>
+            {s.href ? (
+              <a href={s.href} target="_blank" rel="noreferrer noopener" aria-label={s.label}>
+                <span aria-hidden="true">{s.short}</span>
+              </a>
+            ) : (
+              <span className="disabled" aria-label={`${s.label} — link not set yet`}>
+                <span aria-hidden="true">{s.short}</span>
+                {s.todo ? <Todo label="!" /> : null}
+              </span>
+            )}
           </li>
         ))}
       </ul>
     </aside>
-  )
-}
-
-export function Sections() {
-  return (
-    <div className="sections">
-      {content.sections.map((s) => (
-        <section key={s.id} id={s.id} className="section">
-          <p className="section-index">{s.index}</p>
-          <h2 className="section-title">{s.title}</h2>
-          <p className="section-body">{s.body}</p>
-        </section>
-      ))}
-    </div>
   )
 }

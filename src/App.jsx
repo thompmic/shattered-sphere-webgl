@@ -1,22 +1,26 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Stage } from './scene/Stage.jsx'
-import { Nav, HeroCopy, RightRail, Sections } from './ui/Chrome.jsx'
+import { Nav, HeroCopy, RightRail } from './ui/Chrome.jsx'
+import { Sections } from './ui/Sections.jsx'
 import { startScroll, scroll } from './scroll.js'
 
 export default function App() {
   const chrome = useRef()
-  const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    const stop = startScroll()
-    setReady(true)
+    // the browser restoring a mid-page scroll on reload leaves the hero already
+    // blown apart, which reads as broken rather than as an effect
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+    window.scrollTo(0, 0)
 
-    // drive the chrome fade straight off the scroll store rather than through state,
-    // so scrolling never re-renders the tree that owns the canvas
+    const stop = startScroll()
+
+    // drive the hero chrome's fade straight off the scroll store rather than React
+    // state — scrolling must never re-render the tree that owns the canvas
     let raf
     const tick = () => {
       if (chrome.current) {
-        chrome.current.dataset.scrolled = scroll.progress > 0.06 ? 'true' : 'false'
+        chrome.current.dataset.scrolled = scroll.progress > 0.04 ? 'true' : 'false'
       }
       raf = requestAnimationFrame(tick)
     }
@@ -30,6 +34,10 @@ export default function App() {
 
   return (
     <>
+      <a className="skip-link" href="#work">
+        Skip to content
+      </a>
+
       <div className="stage" id="top">
         <Stage />
       </div>
@@ -40,10 +48,10 @@ export default function App() {
         <RightRail />
       </div>
 
-      <div className="scroller">
-        <div className="hero-spacer" />
+      <main className="scroller">
+        <div className="hero-spacer" aria-hidden="true" />
         <Sections />
-      </div>
+      </main>
     </>
   )
 }

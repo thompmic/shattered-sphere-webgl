@@ -742,7 +742,34 @@ sections below it are new design work, not decoded from the Figma file.
 | Mobile | ❌ | deferred (§6 answer 4) — **no longer deferrable** for a portfolio; recruiters open links on phones |
 | Deployment | ❌ | build is deploy-ready (§0 step 8), just not live |
 
-### 13.3 The one hard blocker
+### 13.3 ✅ Structure built 2026-08-12 — now waiting on content
+
+The portfolio skeleton exists: **Work → About → Skills → Interests → Contact**, plus a footer.
+Everything is wired to `src/content.js`, so filling it in is a one-file job.
+
+- **The site now carries the user's name**, not "Studio One.Zero". `identity.name` is
+  `Michael Thompson` (taken from git config); **`identity.role` is a TODO** — nobody has said
+  what his actual title is.
+- **`todo: true` in `content.js` renders an amber TODO chip** next to the placeholder, in dev
+  only. `src/ui/Todo.jsx` early-returns on `import.meta.env.DEV`, so the whole thing is
+  tree-shaken from production — **verified by grepping the built bundle**. 21 chips currently.
+- **No link points at `#`.** Socials with no URL render as visibly disabled rather than as
+  dead links, so nothing looks finished when it is not.
+- **Mobile is done** (§13.2 said it was no longer deferrable): hamburger nav that opens,
+  updates `aria-expanded` and closes on navigate; rail hidden; no horizontal overflow at 375px.
+- **A11y**: skip link, `:focus-visible` rings, `sr-only` labels, reduced-motion honoured.
+- Real `<title>`, description, OG tags and an SVG favicon. **`og:image` is deliberately absent**
+  rather than pointing at a file that does not exist — add it after the first deploy.
+- The subject now **drifts right and back** as you scroll (`SCROLL.subjectDrift`) and each
+  section carries its own scrim (`.panel`), because body copy over the lit sphere was only
+  just legible. Both were needed; the drift alone was not enough.
+
+⚠️ **Two things could not be verified**, because the browser pane stopped compositing and a
+hidden tab has no `requestAnimationFrame`: **Lenis anchor scrolling from the nav**, and how any
+of it actually *looks*. The click handler was confirmed to fire and suppress the native jump,
+so the wiring is right, but watch the nav scroll on the first real run.
+
+### 13.4 The one hard blocker
 
 **Real content.** Everything above is scaffolding around facts only the user has: his name and
 title, the actual projects, the LinkedIn URL, which socials, what interests. Do **not** invent
