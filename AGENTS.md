@@ -73,7 +73,7 @@ direction → `§9` toolchain → `§10` **framework choice, blocking** → `§7
 |---|---|
 | **Name** | Studio One.Zero — 3D website |
 | **Root** | `C:\Users\PrimeMike\OneDrive\Desktop\3D website` — **flattened 2026-08-12**; `npm run dev` runs straight from here. The old nested `3D website\3D website` layout and the `__MACOSX` zip junk are gone |
-| **Goal** | A **personal portfolio site** (user's stated goal, 2026-08-12), built from the existing Figma + Blender design |
+| **Goal** | A **full personal portfolio** — projects, about, socials, interests (§13). The shattered-sphere hero is the *opening*, not the whole site |
 | **Status** | **Direction locked (§6). Framework picked (§10). Toolchain verified present (§9). `.blend` fully characterized (§5). No site code written yet.** |
 | **Machine** | ✅ Arrived on the user's **Windows desktop** 2026-08-12. Windows 11, PowerShell. The old macOS paths in §4 are historical — translate them. |
 | **Stack** | **Vite + React Three Fiber** (Option A, chosen by user 2026-08-12) |
@@ -702,6 +702,56 @@ the dark shell dissolves into the dark ground.
 - **No `laptop.mp4`, duck/petals or brain imagery** — optional per §7, and none of them earned
   a place yet.
 - Links are all `#` (open thread §11.4).
+
+---
+
+## 13. Where this is going — full personal portfolio (stated by the user 2026-08-12)
+
+> *"I will improve the webpage and adapt it to a full personal portfolio showcasing my other
+> projects, about me, and my LinkedIn and socials and interests — everything a personal
+> portfolio must have."*
+
+**This reframes the project.** Everything before §13 treats the shattered sphere as *the*
+site. It is now **the hero of a larger portfolio** — the thing that makes someone scroll,
+not the whole product. Read the §3 design spec in that light: it governs the hero, and the
+sections below it are new design work, not decoded from the Figma file.
+
+### 13.1 What still holds
+
+- The hero, the shatter shader, the dark §3.5b palette, the −4% tracking, the inset card, the
+  Kulim Park / Manrope pairing. **These become the design system** for everything added.
+- The continuous-scroll rig (§6 answer 1a) already carries the 3D behind lower sections, which
+  is exactly what a portfolio wants — the sphere should keep reacting as you read.
+- `src/content.js` already drives every string, so new sections are content entries, not new
+  components, wherever possible.
+
+### 13.2 What a personal portfolio needs that this does not have
+
+| Piece | Status | Note |
+|---|---|---|
+| Hero / identity | ✅ built | but the copy is still Figma placeholder — it says "Studio One.Zero", not the user's name |
+| About | ❌ | who he is, what he does, what he's good at |
+| Projects / work | ❌ **the core of it** | needs real projects with title, role, stack, outcome, links, and ideally a thumbnail each |
+| Skills / stack | ❌ | |
+| Experience or education | ❌ | optional depending on how he wants to read |
+| Interests | ❌ | user asked for it specifically |
+| Contact + socials | ⚠️ partial | the rail has 3 placeholder glyphs pointing at `#`. Needs real LinkedIn + GitHub + others |
+| Resume/CV download | ❌ | conventional, worth offering |
+| Meta: real `<title>`, description, OG image, favicon | ❌ | currently "Studio One.Zero" placeholder |
+| Accessibility pass | ⚠️ | reduced-motion is handled; focus states, contrast and canvas-free fallback are not |
+| Mobile | ❌ | deferred (§6 answer 4) — **no longer deferrable** for a portfolio; recruiters open links on phones |
+| Deployment | ❌ | build is deploy-ready (§0 step 8), just not live |
+
+### 13.3 The one hard blocker
+
+**Real content.** Everything above is scaffolding around facts only the user has: his name and
+title, the actual projects, the LinkedIn URL, which socials, what interests. Do **not** invent
+these — a portfolio with fabricated projects is worse than no portfolio. Ask for them, or build
+the structure with clearly-marked `TODO` placeholders and hand it back for filling in.
+
+Two open sub-questions: does **"Studio One.Zero"** survive as a brand, or does the site take his
+own name (§11.5)? And is the samurai-reference *structure* still the target once there are six
+sections instead of one screen?
 
 ---
 
