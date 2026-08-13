@@ -1,0 +1,370 @@
+/*
+ * Studio One.Zero
+ *
+ * Tokens are the DARK palette from AGENTS.md §3.5b, which deliberately overrides the
+ * light Figma palette in §3.5 — #8B0000 text on near-black measures about 1.4:1 and
+ * fails WCAG badly, so the dark red survives only as glow, never as text.
+ *
+ * Layout geometry (§3.2/§3.3) is expressed against the 1600×1000 artboard so the
+ * proportions hold as the viewport changes. Desktop-first: mobile is a later phase
+ * (§6 answer 4), and the small-screen rules at the bottom are a graceful fallback,
+ * not the mobile design.
+ */
+
+:root {
+  --space-0: #07060b;
+  --space-1: #120a14;
+  --space-2: #2a0e18;
+  --star: #fff6f0;
+  --ink: #f5edea;
+  --ink-dim: rgba(245, 237, 234, 0.55);
+  --accent: #f0504a;
+  --accent-deep: #8b0000;
+
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.12);
+
+  --card-inset: 22px;
+  --card-radius: 26px;
+
+  /* §3.4 — every string on the site is tracked at −4%. This defines the look. */
+  --tracking: -0.04em;
+
+  --font-ui: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--space-0);
+}
+
+body {
+  min-height: 100%;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  letter-spacing: var(--tracking);
+  -webkit-font-smoothing: antialiased;
+
+  /* the nebula (§3.5b): warm bloom low and centred behind the subject, falling off
+     to near-black at the corners — the lighting beat from the reference (§3.7b) */
+  background:
+    radial-gradient(120% 80% at 50% 96%, var(--space-2) 0%, transparent 55%),
+    radial-gradient(90% 60% at 18% 12%, var(--space-1) 0%, transparent 60%),
+    var(--space-0);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── The card ──────────────────────────────────────────────────────────────────
+   §3.7b: the hero is a rounded card inset from the page edge, not full bleed, so it
+   reads as floating over the deeper page ground. The canvas is fixed inside it while
+   the sections scroll over — that is what makes the parallax continuous (§6 1a). */
+
+.stage {
+  position: fixed;
+  inset: var(--card-inset);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  /* §3.5b is a DARK space field with a warm bloom only near the subject. Spread the
+     warm tint across the whole card and it stops reading as space and starts reading
+     as a red gradient — keep these tight and let the corners fall to --space-0. */
+  background:
+    radial-gradient(58% 44% at 50% 62%, rgba(139, 0, 0, 0.5) 0%, transparent 70%),
+    radial-gradient(80% 55% at 50% 100%, rgba(42, 14, 24, 0.75) 0%, transparent 65%),
+    var(--space-0);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 40px 120px rgba(0, 0, 0, 0.6);
+  z-index: 0;
+}
+
+.stage-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* ── Chrome ─────────────────────────────────────────────────────────────────── */
+
+.chrome {
+  position: fixed;
+  inset: var(--card-inset);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.chrome > * {
+  pointer-events: auto;
+}
+
+.nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 26px 34px;
+  gap: 24px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+}
+
+.logo-word {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: var(--tracking);
+}
+
+.nav-links {
+  display: flex;
+  gap: 34px;
+  justify-self: center;
+}
+
+.nav-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-dim);
+  transition: color 0.25s ease;
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+}
+
+.cta {
+  justify-self: end;
+  padding: 11px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  color: var(--ink);
+  background: linear-gradient(180deg, rgba(240, 80, 74, 0.28), rgba(139, 0, 0, 0.35));
+  border: 1px solid rgba(240, 80, 74, 0.45);
+  box-shadow: 0 8px 30px rgba(240, 80, 74, 0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 38px rgba(240, 80, 74, 0.3);
+}
+
+/* §3.2 puts this block at (450,154) on the 1600×1000 artboard — crucially, to the
+   RIGHT of the `06` numeral, which occupies x 20–423. Anchoring it to the left edge
+   instead drops it straight on top of the numeral, so keep the artboard fraction. */
+.hero-tagline {
+  position: absolute;
+  top: 15.4%; /* 154 / 1000 */
+  left: 28.1%; /* 450 / 1600 */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 14px;
+  line-height: 1.2;
+  color: rgba(245, 237, 234, 0.78);
+  text-shadow: 0 1px 12px rgba(7, 6, 11, 0.85);
+  max-width: 220px;
+}
+
+/* the bottom-left stat pair + bottom-right kicker (§3.7b) */
+.hero-stats {
+  position: absolute;
+  left: 34px;
+  right: 300px;
+  bottom: 34px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.stat-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.stat-sub {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--ink-dim);
+}
+
+.hero-kicker {
+  margin: 0;
+  max-width: 230px;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.1;
+  text-align: right;
+  color: var(--ink);
+}
+
+/* ── The frosted rail (§3.3) — 220×960 at x=1360 on a 1600 artboard ─────────── */
+
+.rail {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  width: 210px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 22px;
+  border-radius: 18px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.rail-cta {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--ink);
+}
+
+.rail-social {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rail-social a {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.rail-social a:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── Scrolling content over the fixed stage ────────────────────────────────── */
+
+.scroller {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-spacer {
+  height: 100vh;
+}
+
+.sections {
+  position: relative;
+  padding: 0 0 22vh;
+}
+
+.section {
+  min-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 620px;
+  margin-left: clamp(34px, 8vw, 140px);
+  padding: 8vh 0;
+}
+
+.section-index {
+  margin: 0 0 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.section-title {
+  margin: 0 0 20px;
+  font-size: clamp(34px, 4.4vw, 62px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: var(--tracking);
+}
+
+.section-body {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+}
+
+/* the chrome belongs to the hero — let it go as the sections take over */
+.chrome {
+  transition: opacity 0.4s ease;
+}
+
+.chrome[data-scrolled='true'] .rail,
+.chrome[data-scrolled='true'] .hero-tagline,
+.chrome[data-scrolled='true'] .hero-stats {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+/* ── Fallback for narrow viewports ──────────────────────────────────────────
+   Mobile is explicitly a later phase (§6 answer 4). This only keeps the page from
+   breaking — it is not the mobile design. */
+
+@media (max-width: 900px) {
+  .rail {
+    display: none;
+  }
+  .hero-stats {
+    right: 34px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hero-kicker {
+    text-align: left;
+    font-size: 20px;
+  }
+  .nav-links {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,476 @@
+{
+  "shards": {
+    "count": 700,
+    "verts": 43965,
+    "tris": 44471,
+    "centroid_radius_min": 0.9558101296424866,
+    "centroid_radius_max": 1.0048989057540894
+  },
+  "cage": {
+    "verts": 23812,
+    "polys": 31744
+  },
+  "core": {
+    "verts": 482,
+    "polys": 512
+  },
+  "orb": {
+    "verts": 1986,
+    "polys": 1984,
+    "world_pos_frame1": [
+      0.0,
+      0.66912,
+      0.9186
+    ]
+  },
+  "draw_calls": 4,
+  "size_mb": {
+    "uncompressed": 9.295,
+    "draco": 1.132
+  },
+  "camera": {
+    "blender_location": [
+      -4.00391,
+      2.94078,
+      3.34571
+    ],
+    "blender_rotation_euler": [
+      1.11573,
+      -0.0,
+      -2.21361
+    ],
+    "three_position": [
+      -4.00391,
+      3.34571,
+      -2.94078
+    ],
+    "three_look_at": [
+      0.30223,
+      0.71324,
+      0.28421
+    ],
+    "lens_mm": 100.0,
+    "sensor_mm": 36.0,
+    "sensor_fit": "AUTO",
+    "render": [
+      1600,
+      1000
+    ],
+    "horizontal_fov_deg": 20.4079,
+    "vertical_fov_deg_at_1600x1000": 12.8376,
+    "note": "three_* values are already in Three.js Y-up space. Blender sensor_fit AUTO fits the LARGER image dimension, so 36mm maps to the HORIZONTAL fov at 1600x1000."
+  },
+  "orbit": {
+    "radius": 1.13806,
+    "plane_three": "circle in the Three.js Y/Z plane (x = 0)",
+    "formula_three": "orb = vec3(0, R*sin(t), -R*cos(t)); t starts at 0.941 rad for frame 1",
+    "path_duration_frames": 100,
+    "samples_frame_xyz_three": [
+      [
+        1,
+        0.0,
+        0.59692,
+        -0.96737
+      ],
+      [
+        6,
+        0.0,
+        0.61951,
+        -0.95211
+      ],
+      [
+        11,
+        0.0,
+        0.64211,
+        -0.93685
+      ],
+      [
+        16,
+        0.0,
+        0.6647,
+        -0.92159
+      ],
+      [
+        21,
+        0.0,
+        0.68729,
+        -0.90632
+      ],
+      [
+        26,
+        0.0,
+        0.70852,
+        -0.88929
+      ],
+      [
+        31,
+        0.0,
+        0.72898,
+        -0.87128
+      ],
+      [
+        36,
+        0.0,
+        0.74945,
+        -0.85326
+      ],
+      [
+        41,
+        0.0,
+        0.76991,
+        -0.83525
+      ],
+      [
+        46,
+        0.0,
+        0.79038,
+        -0.81723
+      ],
+      [
+        51,
+        0.0,
+        0.8101,
+        -0.79848
+      ],
+      [
+        56,
+        0.0,
+        0.82812,
+        -0.77801
+      ],
+      [
+        61,
+        0.0,
+        0.84613,
+        -0.75755
+      ],
+      [
+        66,
+        0.0,
+        0.86415,
+        -0.73708
+      ],
+      [
+        71,
+        0.0,
+        0.88216,
+        -0.71662
+      ],
+      [
+        76,
+        0.0,
+        0.90018,
+        -0.69615
+      ],
+      [
+        81,
+        0.0,
+        0.91555,
+        -0.67364
+      ],
+      [
+        86,
+        0.0,
+        0.93081,
+        -0.65105
+      ],
+      [
+        91,
+        0.0,
+        0.94607,
+        -0.62846
+      ],
+      [
+        96,
+        0.0,
+        0.96133,
+        -0.60586
+      ],
+      [
+        101,
+        0.0,
+        0.97659,
+        -0.58327
+      ],
+      [
+        106,
+        0.0,
+        0.99003,
+        -0.55961
+      ],
+      [
+        111,
+        0.0,
+        1.00226,
+        -0.53524
+      ],
+      [
+        116,
+        0.0,
+        1.01449,
+        -0.51087
+      ],
+      [
+        121,
+        0.0,
+        1.02672,
+        -0.4865
+      ],
+      [
+        126,
+        0.0,
+        1.03895,
+        -0.46214
+      ],
+      [
+        131,
+        0.0,
+        1.05049,
+        -0.43748
+      ],
+      [
+        136,
+        0.0,
+        1.05944,
+        -0.41172
+      ],
+      [
+        141,
+        0.0,
+        1.06838,
+        -0.38597
+      ],
+      [
+        146,
+        0.0,
+        1.07733,
+        -0.36021
+      ],
+      [
+        151,
+        0.0,
+        1.08628,
+        -0.33446
+      ],
+      [
+        156,
+        0.0,
+        1.09523,
+        -0.30871
+      ],
+      [
+        161,
+        0.0,
+        1.10154,
+        -0.28222
+      ],
+      [
+        166,
+        0.0,
+        1.107,
+        -0.25551
+      ],
+      [
+        171,
+        0.0,
+        1.11246,
+        -0.2288
+      ],
+      [
+        176,
+        0.0,
+        1.11792,
+        -0.20209
+      ],
+      [
+        181,
+        0.0,
+        1.12338,
+        -0.17538
+      ],
+      [
+        186,
+        0.0,
+        1.12806,
+        -0.14856
+      ],
+      [
+        191,
+        0.0,
+        1.12989,
+        -0.12135
+      ],
+      [
+        196,
+        0.0,
+        1.13172,
+        -0.09415
+      ],
+      [
+        201,
+        0.0,
+        1.13355,
+        -0.06695
+      ],
+      [
+        206,
+        0.0,
+        1.13538,
+        -0.03975
+      ],
+      [
+        211,
+        0.0,
+        1.13722,
+        -0.01254
+      ],
+      [
+        216,
+        0.0,
+        1.13707,
+        0.01466
+      ],
+      [
+        221,
+        0.0,
+        1.13524,
+        0.04186
+      ],
+      [
+        226,
+        0.0,
+        1.13341,
+        0.06907
+      ],
+      [
+        231,
+        0.0,
+        1.13158,
+        0.09627
+      ],
+      [
+        236,
+        0.0,
+        1.12975,
+        0.12347
+      ],
+      [
+        241,
+        0.0,
+        1.12792,
+        0.15068
+      ],
+      [
+        246,
+        0.0,
+        1.12295,
+        0.17746
+      ]
+    ]
+  },
+  "shell_spin_three": {
+    "frame1_matrix3": [
+      [
+        0.742761,
+        -0.024669,
+        -0.669102
+      ],
+      [
+        0.033194,
+        0.999449,
+        0.0
+      ],
+      [
+        0.668733,
+        -0.02221,
+        0.74317
+      ]
+    ],
+    "frame250_matrix3": [
+      [
+        0.429444,
+        -0.606531,
+        -0.669102
+      ],
+      [
+        0.81614,
+        0.577854,
+        0.0
+      ],
+      [
+        0.386643,
+        -0.546081,
+        0.74317
+      ]
+    ],
+    "note": "row-major 3x3 in Three.js space; feed as the uSpin uniform (THREE.Matrix3.fromArray expects column-major, so transpose or set elements directly)."
+  },
+  "shatter": {
+    "note": "reproduce in the vertex shader against the orb position",
+    "f": "f = 0.2 / distance(shardCentroid, orbPos)",
+    "ramp": "ramp = clamp((0.8068 - f) / (0.8068 - 0.3955), 0, 1)",
+    "scale": "shardScale = ramp   (1 = intact, 0 = vanished)",
+    "rotation_rad": "angle = 14.1 * (1.0 - ramp), applied equally to x/y/z",
+    "distance_thresholds": {
+      "fully_gone_below": 0.2479,
+      "intact_above": 0.5057
+    },
+    "shell_spin_euler_frame1": [
+      0.0,
+      -0.0332,
+      -0.733
+    ],
+    "shell_spin_euler_frame250": [
+      0.0,
+      -0.9547,
+      -0.733
+    ],
+    "orb_radius": 0.1558
+  },
+  "materials": {
+    "cell": {
+      "base_color_linear": [
+        0.839,
+        0.048,
+        0.017
+      ],
+      "metallic": 0.709,
+      "roughness": 0.595
+    },
+    "fly": {
+      "base_color_linear": [
+        0.01,
+        0.01,
+        0.01
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0
+    },
+    "lines": {
+      "base_color_linear": [
+        0.831,
+        0.058,
+        0.0
+      ],
+      "metallic": 0.682,
+      "roughness": 0.843
+    },
+    "Material.001": {
+      "emission_linear": [
+        1.0,
+        0.271,
+        0.144
+      ],
+      "strength": 10.0
+    }
+  },
+  "attributes": {
+    "_SHARDC": "vec3 shard centroid, rest pose, PRE-ROTATED TO Y-UP to match POSITION",
+    "_SHARDR": "float 0..1 stable per-shard random",
+    "three_js_names": [
+      "_shardc",
+      "_shardr"
+    ],
+    "warning": "glTF export_yup only converts POSITION/NORMAL; custom attributes pass through in Blender Z-up. The exporter compensates for _SHARDC."
+  }
+}
