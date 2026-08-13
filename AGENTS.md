@@ -29,8 +29,12 @@ installed (§9), and the user picked **Vite + React Three Fiber** (§10).
    subject, shatter shader wired to scroll, frosted rail, three scroll sections. **§12.**
 6. **← YOU ARE HERE. Look at it and art-direct it.** The pipeline is proven correct
    end-to-end; what it has *not* had is a pass by eye. §12.4 lists the specific dials.
-7. **`git init`.** Still not a repo. `.gitignore` is already written. Do this before the code
-   grows, and decide whether the 21 MB `.blend` and 12 MB `.mp4` belong in the repo or beside it.
+7. ~~`git init`~~ ✅ **DONE — pushed public to
+   [thompmic/shattered-sphere-webgl](https://github.com/thompmic/shattered-sphere-webgl).**
+8. **Deploy it.** The goal is a personal portfolio, and it is not live yet. `npm run build`
+   works from a clean checkout (`prebuild` regenerates `public/`), so Vercel or Netlify need no
+   config beyond "build: `npm run build`, output: `dist`". Then put the URL in the README.
+9. **Credit @Bachynskyi_ui on the site itself**, not only in the README (§2).
 
 ### Do not redo this work
 - The `.fig` is already fully decoded → `design-reference/figma-canvas.json`. Don't re-decode.
@@ -73,7 +77,7 @@ direction → `§9` toolchain → `§10` **framework choice, blocking** → `§7
 | **Status** | **Direction locked (§6). Framework picked (§10). Toolchain verified present (§9). `.blend` fully characterized (§5). No site code written yet.** |
 | **Machine** | ✅ Arrived on the user's **Windows desktop** 2026-08-12. Windows 11, PowerShell. The old macOS paths in §4 are historical — translate them. |
 | **Stack** | **Vite + React Three Fiber** (Option A, chosen by user 2026-08-12) |
-| **Git** | Not initialized |
+| **Git** | ✅ **[github.com/thompmic/shattered-sphere-webgl](https://github.com/thompmic/shattered-sphere-webgl)** — public, `main`. Lean repo (29 files, 2.1 MB): @Bachynskyi_ui's raw `.fig`/`.blend`/`.mp4` and the big reference PNGs are gitignored, the derived `.glb` is committed |
 
 **Direction locked 2026-08-12:** real WebGL 3D from `22.blend` via Three.js · single hero
 leading into a scrolling multi-section page with parallax carried between sections ·
@@ -586,6 +590,15 @@ shard problem is solved at *export* (§5), not by the framework.
   driven by scroll, the frosted rail, three scroll sections. Three real bugs found and fixed by
   verification — the `_SHARDC` coordinate space, the `core002` node-name collision, and the
   spin-matrix basis change (**§12.2**). **Not yet judged by eye** — see §12.4. Still no `git init`.
+- **2026-08-12 (flatten + publish)** — **Project flattened**: root is now
+  `…\Desktop\3D website` (was nested one level), `__MACOSX` deleted, colliding outer `.claude`
+  permissions merged and the stray 89-byte `package-lock.json` stub removed. `npm run dev` runs
+  from the root. Hero art-directed in the browser (§12.4). **User clarified the origin: the
+  concept and files came from [@Bachynskyi_ui](https://www.instagram.com/bachynskyi_ui/), who
+  gave them to him directly** — so this is a sanctioned adaptation, and §2 now carries the
+  credit rules. `prebuild` added so clean-checkout builds work. **`git init` + first commit +
+  pushed public** to `thompmic/shattered-sphere-webgl` (29 files, 2.1 MB; his raw sources
+  gitignored). Goal restated by the user: **this is a personal portfolio site.** Not deployed yet.
 
 ---
 
