@@ -36,7 +36,7 @@ function CameraRig() {
       camera.updateProjectionMatrix()
     }
 
-    const p = scroll.progress
+    const p = scroll.value
     camera.position.set(
       base.x + SCROLL.cameraDrift[0] * p,
       base.y + SCROLL.cameraDrift[1] * p,
@@ -66,7 +66,7 @@ function Motes({ count = 220 }) {
     if (!ref.current) return
     const t = state.clock.elapsedTime
     ref.current.rotation.z = t * 0.012
-    ref.current.position.y = Math.sin(t * 0.18) * 0.25 + scroll.progress * 1.4
+    ref.current.position.y = Math.sin(t * 0.18) * 0.25 + scroll.value * 1.4
   })
 
   return (

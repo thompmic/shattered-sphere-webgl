@@ -65,7 +65,7 @@ export function DisplayType() {
 
   useFrame(() => {
     if (!group.current) return
-    const p = scroll.progress
+    const p = scroll.value
     // the type drifts slower than the subject — this is the parallax that carries
     // from the hero down into the sections (§6 answer 1a)
     group.current.position.y = p * 2.2

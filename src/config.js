@@ -66,7 +66,11 @@ export const TYPE = {
 
 // ── Scroll ────────────────────────────────────────────────────────────────────
 export const SCROLL = {
-  lerp: 0.09,
+  lerp: 0.075, // Lenis: how hard it smooths the page scroll itself
+  // Second damping stage applied to the value the SCENE reads (see scroll.js).
+  // Lower = smoother but laggier. 3.2 keeps the sphere feeling attached to the
+  // wheel while removing the per-event stepping.
+  damping: 3.2,
   // The parallax that carries from the hero into the lower sections (§6 answer 1a).
   //
   // Now that the page is a full portfolio (§13) rather than one screen, the subject

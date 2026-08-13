@@ -48,7 +48,11 @@ const NORMAL_CHUNK = /* glsl */ `
   vec3 sCentroid = uSpin * aShardC;
   float sDist = max(distance(sCentroid, uOrb) - uOrbRadius, 1e-6);
   float sF = uK / sDist;
+  // Blender's colour ramp is LINEAR, which makes the dissolve boundary a hard edge
+  // that pops as the orb sweeps past. Easing it is a deliberate deviation from the
+  // source for the sake of smoothness — the thresholds are unchanged.
   float sRamp = clamp((uRampBlack - sF) / (uRampBlack - uRampWhite), 0.0, 1.0);
+  sRamp = sRamp * sRamp * (3.0 - 2.0 * sRamp);
   float sAngle = uRotation * (1.0 - sRamp) + uBurst * aShardR * 2.4;
   mat3 sRot = shatterRotXYZ(sAngle);
 

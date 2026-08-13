@@ -20,7 +20,7 @@ export default function App() {
     let raf
     const tick = () => {
       if (chrome.current) {
-        chrome.current.dataset.scrolled = scroll.progress > 0.04 ? 'true' : 'false'
+        chrome.current.dataset.scrolled = scroll.target > 0.04 ? 'true' : 'false'
       }
       raf = requestAnimationFrame(tick)
     }

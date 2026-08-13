@@ -77,7 +77,7 @@ export function Subject() {
   const orbPos = useMemo(() => new THREE.Vector3(), [])
 
   useFrame((state) => {
-    const p = scroll.progress
+    const p = scroll.value
     const t = state.clock.elapsedTime
 
     // the orb keeps drifting on its own so the hero is alive before you touch the
