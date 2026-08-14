@@ -24,12 +24,15 @@
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Manrope is the UI face for the whole site (§3.4). Kulim Park is NOT loaded
-         here — the display numerals render inside WebGL from public/fonts. -->
+    <!-- Manrope is the UI face (§3.4). Anton is the base for the painted name: heavy
+         and condensed, which is what a loaded brush actually lays down. The brush
+         character itself is generated (see src/scene/inkTexture.js) rather than taken
+         from a font, because free brush faces are thin handwriting, not the heavy
+         ragged strokes we want. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Anton&display=swap"
       rel="stylesheet"
     />
 

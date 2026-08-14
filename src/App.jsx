@@ -38,6 +38,14 @@ export default function App() {
         Skip to content
       </a>
 
+      {/* The brush face is only ever drawn into a canvas, and a font that nothing in
+          the DOM renders can sit unfetched — `document.fonts.load()` alone is not a
+          reliable trigger. Putting the glyphs on the page, off-screen, makes the
+          browser fetch it as part of layout. */}
+      <span className="brush-preload" aria-hidden="true">
+        MichaelThompson
+      </span>
+
       <div className="stage" id="top">
         <Stage />
       </div>

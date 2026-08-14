@@ -47,6 +47,50 @@ export const SHATTER = {
   burst: 1.5, // TASTE — extra outward push of the shards as you scroll away
 }
 
+// ── The name backdrop ─────────────────────────────────────────────────────────
+// White brush-painted name behind the subject, with ink running off the strokes.
+// Lives INSIDE the WebGL scene so the sphere occludes it — that occlusion is the
+// whole effect (§3.7). Move it to the DOM and it collapses into a flat caption.
+export const NAME = {
+  lines: ['MICHAEL', 'THOMPSON'], // caps: the reference style is all-caps
+  font: 'Anton', // heavy condensed base; the brush character is added, not borrowed
+  fontTimeoutMs: 4000, // give the CDN time; fall back rather than hang
+  canvas: { width: 2048, height: 1024 },
+  seed: 20260813, // fixed, so the strokes are identical on every reload
+  z: -1.9, // behind the subject, which spans roughly -1..1
+  widthFraction: 0.94, // of the visible frame at that depth
+  opacity: 0.95,
+  yOffset: 0.15, // world units, nudges the block off dead centre
+
+  // layout, as fractions of the canvas. Baselines are DERIVED from the measured
+  // ascent, not fixed here — Anton's caps are much taller than a nominal em
+  // fraction implies, and guessing clips the tops.
+  safeWidth: 0.88,
+  topMargin: 0.07,
+  maxBlockHeight: 0.52, // leaves the lower canvas free for drips
+  lineGap: 1.14, // multiples of the cap height
+  letterSpacing: '6px', // Anton is condensed; without this the caps merge
+  skew: -0.1, // leans the caps; a brush stroke is never perfectly upright
+
+  // Brush character. The balance that matters: strokes stay mostly SOLID, the
+  // streaks read through them, and the damage concentrates on the outline. Push
+  // speckle or edgeBites much past these and the interiors turn to camouflage.
+  striations: 620, // long dry-brush streaks along the stroke direction
+  striationAlpha: [0.1, 0.38],
+  speckle: 1200, // fine grain
+  speckleRadius: [0.4, 1.6],
+  edgeBites: 520, // chunks taken out of the OUTLINE (see edge detection)
+  edgeBiteSize: [2, 9], // px radii — larger than this punches holes, not tears
+  edgeProbe: 2, // px: how far to look when deciding a pixel is on the edge
+
+  dripChance: 0.17, // per candidate column
+  maxDrips: 30,
+  dripColumnStep: 9, // px between candidate columns
+  dripLength: [30, 175], // px
+  dripWidth: [1.8, 6], // px
+  spatter: 70,
+}
+
 // ── Scroll ────────────────────────────────────────────────────────────────────
 export const SCROLL = {
   lerp: 0.075, // Lenis: how hard it smooths the page scroll itself

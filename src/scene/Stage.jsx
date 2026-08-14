@@ -6,6 +6,7 @@ import * as THREE from 'three'
 import { CAMERA, SCROLL } from '../config.js'
 import { scroll } from '../scroll.js'
 import { Subject } from './Subject.jsx'
+import { NameBackdrop } from './NameBackdrop.jsx'
 
 /**
  * Depth order, back → front (AGENTS.md §3.7):
@@ -102,6 +103,7 @@ function SceneContents({ onPerf }) {
           or the starfield simply is not there. `fade` stops the far ones aliasing. */}
       <Stars radius={18} depth={16} count={5200} factor={5} saturation={0} fade speed={0.3} />
       <Motes />
+      <NameBackdrop />
 
       <Suspense fallback={null}>
         <Subject />
