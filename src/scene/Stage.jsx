@@ -1,12 +1,13 @@
 import { Suspense, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Environment, Lightformer, PerformanceMonitor, Stars } from '@react-three/drei'
+import { Environment, Lightformer, PerformanceMonitor } from '@react-three/drei'
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { CAMERA, SCROLL } from '../config.js'
 import { scroll } from '../scroll.js'
 import { Subject } from './Subject.jsx'
 import { NameBackdrop } from './NameBackdrop.jsx'
+import { Starfield } from './Starfield.jsx'
 
 /**
  * Depth order, back → front (AGENTS.md §3.7):
@@ -98,10 +99,7 @@ function SceneContents({ onPerf }) {
 
       <CameraRig />
 
-      {/* §3.5b: a dark space field. The camera is a 20° telephoto, so a wide sparse
-          field puts almost nothing on screen — keep the shell tight and the count high
-          or the starfield simply is not there. `fade` stops the far ones aliasing. */}
-      <Stars radius={18} depth={16} count={5200} factor={5} saturation={0} fade speed={0.3} />
+      <Starfield />
       <Motes />
       <NameBackdrop />
 

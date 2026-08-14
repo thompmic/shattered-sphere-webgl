@@ -47,6 +47,26 @@ export const SHATTER = {
   burst: 1.5, // TASTE — extra outward push of the shards as you scroll away
 }
 
+// ── Starfield ─────────────────────────────────────────────────────────────────
+// Generated inside a cone down the view axis rather than on a sphere: the camera
+// is a 20° telephoto, so a spherical shell wastes almost every point off-screen.
+// `spreadDeg` is deliberately wider than the fov so the field still fills the
+// frame on wide viewports.
+export const STARS = {
+  count: 1500,
+  spreadDeg: 34,
+  verticalBias: 0.78,
+  near: 6,
+  far: 46,
+  size: [0.7, 2.6],
+  brightFraction: 0.07, // a few bright ones carry the field, the rest are dust
+  white: { r: 1, g: 0.96, b: 0.94 }, // §3.5b --star
+  desaturate: 0.72, // how far each star is pulled back toward white
+  // Tints, not confetti — pulled from the scene's own palette plus a cool
+  // counterweight so the field does not read as one flat wash.
+  palette: ['#fff6f0', '#ffd9c2', '#f0504a', '#8bb7ff', '#c9a8ff', '#ffe9a8'],
+}
+
 // ── The name backdrop ─────────────────────────────────────────────────────────
 // White brush-painted name behind the subject, with ink running off the strokes.
 // Lives INSIDE the WebGL scene so the sphere occludes it — that occlusion is the
