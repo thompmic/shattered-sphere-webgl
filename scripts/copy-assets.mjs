@@ -11,10 +11,15 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+// Only the three decoder files. Copying the whole `gltf` folder also drags in
+// draco_encoder.js — 932 KB that is never loaded, because the site decodes and
+// never encodes.
+const DRACO = 'node_modules/three/examples/jsm/libs/draco/gltf'
 const jobs = [
   ['export/hero.draco.glb', 'public/models/hero.draco.glb'],
-  ['onezero/font/KulimPark-Light.ttf', 'public/fonts/KulimPark-Light.ttf'],
-  ['node_modules/three/examples/jsm/libs/draco/gltf', 'public/draco'],
+  [`${DRACO}/draco_decoder.js`, 'public/draco/draco_decoder.js'],
+  [`${DRACO}/draco_decoder.wasm`, 'public/draco/draco_decoder.wasm'],
+  [`${DRACO}/draco_wasm_wrapper.js`, 'public/draco/draco_wasm_wrapper.js'],
 ]
 
 for (const [from, to] of jobs) {

@@ -6,8 +6,9 @@
  * WCAG badly, so the dark red survives only as glow, never as text.
  *
  * The hero geometry follows the 1600×1000 artboard (§3.2/§3.3). Everything below the
- * hero is new work (§13) built on the same system: −4% tracking, the inset card, the
- * Kulim Park / Manrope pairing.
+ * hero is new work (§13) built on the same system: −4% tracking, the inset card,
+ * Manrope throughout. The painted name backdrop is generated in the WebGL scene
+ * (src/scene/inkTexture.js), not set in CSS.
  */
 
 :root {

@@ -590,6 +590,13 @@ shard problem is solved at *export* (§5), not by the framework.
   driven by scroll, the frosted rail, three scroll sections. Three real bugs found and fixed by
   verification — the `_SHARDC` coordinate space, the `core002` node-name collision, and the
   spin-matrix basis change (**§12.2**). **Not yet judged by eye** — see §12.4. Still no `git init`.
+- **2026-08-13 (art direction round 2)** — Five requested changes, each verified by
+  rendering and looking (§12.6): scroll/scene motion damped, subject given idle motion,
+  `06`/`04` removed, a **brush-painted `MICHAEL THOMPSON` backdrop** added behind the
+  subject (§12.7), and the starfield replaced with a coloured glowing point shader.
+  Cleanup: deleted `DisplayType.jsx`, the `TYPE` config, the second particle system,
+  the now-unused Kulim Park font, and the 932 KB Draco **encoder** that was being
+  copied into `public/` for no reason. r3f bundle 686 → 566 KB.
 - **2026-08-12 (flatten + publish)** — **Project flattened**: root is now
   `…\Desktop\3D website` (was nested one level), `__MACOSX` deleted, colliding outer `.claude`
   permissions merged and the stray 89-byte `package-lock.json` stub removed. `npm run dev` runs
@@ -628,11 +635,15 @@ build is clean at ≈406 KB gzipped JS + the 1.1 MB model.
 | `src/content.js` | **every visible string.** §6 answer 5 — the copy rewrite touches this file only |
 | `src/config.js` | **every tunable number**, each marked `MEASURED` (from Blender — changing it breaks fidelity) or `TASTE` (dial freely) |
 | `src/scroll.js` | one Lenis instance; exposes a plain `scroll.progress` object read inside `useFrame` rather than React state, so scrolling never re-renders the canvas tree |
-| `src/scene/Stage.jsx` | the `<Canvas>`, camera rig, stars, motes, lighting, bloom/vignette |
+| `src/scene/Stage.jsx` | the `<Canvas>`, camera rig, lighting, bloom/vignette, perf monitor |
 | `src/scene/Subject.jsx` | loads the glb, wires the shatter uniforms to scroll |
 | `src/scene/shatterMaterial.js` | the vertex-shader patch — the heart of it |
-| `src/scene/DisplayType.jsx` | the `06` / `04` numerals, **inside the scene** so the subject occludes them |
-| `src/ui/Chrome.jsx` | DOM chrome: nav, tagline, stats, frosted rail, sections |
+| `src/scene/NameBackdrop.jsx` | the painted name plane, **inside the scene** so the subject occludes it |
+| `src/scene/inkTexture.js` | generates the brush-and-drips texture on a canvas |
+| `src/scene/Starfield.jsx` | the coloured glowing star shader |
+| `src/ui/Chrome.jsx` | nav, hero copy, frosted rail |
+| `src/ui/Sections.jsx` | Work / About / Skills / Interests / Contact |
+| `src/ui/Todo.jsx` | dev-only placeholder chip |
 | `src/styles.css` | §3.5b tokens, the inset card, all layout |
 
 ### 12.2 Three things that were wrong and are now right
@@ -692,6 +703,52 @@ the dark shell dissolves into the dark ground.
 - `hero.meta.json` still holds the exact off-axis Blender framing if you ever want the
   Figma crop rather than the straight-on reference structure.
 
+### 12.6 Art direction round 2 (2026-08-13)
+
+Five changes, each verified by rendering and looking at the result.
+
+1. **Motion is damped.** The scene read Lenis's scroll position raw, so every wheel
+   event landed on the camera and the shader as a step. `scroll.js` now exposes
+   `target` (raw) and `value` (damped) — **the scene must read `value`**. Damping is
+   exponential and frame-rate independent, and `dt` is clamped so a backgrounded tab
+   cannot teleport the scene on return. The shatter ramp is also eased with
+   smoothstep; Blender's ramp is linear and its hard boundary popped as the orb swept
+   past. The subject has idle sine motion so it is never completely static.
+2. **`06` / `04` are gone**, along with `DisplayType.jsx`, the `TYPE` config and the
+   Kulim Park font. They were the source design's, not the user's.
+3. **A painted name replaces them** (§12.7).
+4. **The starfield is coloured and glowing** — a small custom point shader replaced
+   drei's `<Stars>`, which is monochrome and scatters over a full sphere. With a 20°
+   telephoto that put nearly every point off-screen. Also **shrank the r3f bundle from
+   686 KB to 566 KB** (gzip 219 → 175 KB).
+5. **`PerformanceMonitor`** steps DPR down only when frames actually drop.
+
+### 12.7 The painted name — how it is made
+
+`inkTexture.js` paints `MICHAEL THOMPSON` onto a 2048×1024 canvas and hands it to a
+plane at `NAME.z`, behind the subject. Three things worth knowing before editing it:
+
+- **The brush character is generated, not from a font.** Free brush faces are thin
+  handwriting; the reference look is a loaded brush dragged across paper. So a heavy
+  condensed base (Anton) is skewed, then eroded in three passes: striations along the
+  stroke direction, fine speckle, and bites out of the silhouette.
+- **The bites use real edge detection** on the rendered alpha. Scattering them at
+  random leaves the outline intact and just pits the middle — which still reads as a
+  bold font behind a texture. Finding the edge pixels is what tears the letters.
+- **The balance is delicate.** Strokes must stay mostly solid. Pushing `speckle` or
+  `edgeBites` much past the values in `config.js` turns the interiors to camouflage.
+- Drips are derived from the ink: the alpha is read back to find the lowest painted
+  pixel per column, so runs hang off real stroke ends. Erosion is **seeded**, so the
+  name is identical on every reload rather than reshaping itself each visit.
+
+⚠️ **Two font-loading traps, both of which silently fall back to a serif:**
+`document.fonts.load()` resolves with an **empty array, not an error**, when the
+@font-face rules are not in the CSSOM yet; and `check(spec)` **without text samples a
+space**, which for a Google face served as many unicode-range subsets is in a subset
+never fetched for Latin text — so the bare check reports false forever. There is also
+an off-screen `.brush-preload` span, because a font only ever drawn into a canvas can
+sit unfetched: `fonts.load()` alone is not a reliable trigger.
+
 ### 12.5 Known gaps
 
 - **Mobile is untouched** — deliberate (§6 answer 4). The `@media (max-width: 900px)` block
@@ -701,7 +758,9 @@ the dark shell dissolves into the dark ground.
 - **The wire cage is 63,488 tris**, over half the scene. First thing to cut if perf bites.
 - **No `laptop.mp4`, duck/petals or brain imagery** — optional per §7, and none of them earned
   a place yet.
-- Links are all `#` (open thread §11.4).
+- `public/draco/draco_decoder.js` (500 KB) is the **non-wasm fallback** and is never fetched by
+  a modern browser — confirmed at runtime. It costs deploy size, not user bandwidth. The
+  932 KB `draco_encoder.js` **was** being copied and is now not: the site decodes, never encodes.
 
 ---
 

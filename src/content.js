@@ -97,8 +97,6 @@ export const content = {
       'A second paragraph is a good place for the human part — how you work, what you are curious about, what you are learning right now.',
     ],
     bodyTodo: true,
-    // Optional: a photo of you. Drop the file in public/ and put the path here.
-    portrait: null,
   },
 
   // ── Skills ─────────────────────────────────────────────────────────────────

@@ -14,7 +14,6 @@ export/check_*.png
 # copied into place by `npm run assets` / `prebuild` — all generated, never edit by hand
 public/draco/
 public/models/
-public/fonts/
 
 # Blender autosave backup — 32 MB of pure noise
 *.blend1

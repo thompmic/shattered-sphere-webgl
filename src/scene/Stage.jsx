@@ -11,12 +11,10 @@ import { Starfield } from './Starfield.jsx'
 
 /**
  * Depth order, back → front (AGENTS.md §3.7):
- *   1 starfield / nebula      (nebula is CSS, behind the transparent canvas)
- *   2 drifting particles
- *   3 giant display type      <- in the scene, so that…
- *   4 the 3D subject          <- …this can occlude it
- *   5 sparks in front
- *   6 DOM chrome              (nav / rail / stats — outside the canvas)
+ *   1 coloured starfield      (the nebula behind it is CSS, under the transparent canvas)
+ *   2 the painted name        <- in the scene, so that…
+ *   3 the 3D subject          <- …this can occlude it
+ *   4 DOM chrome              (nav / rail / copy — outside the canvas)
  */
 
 /** Blender fits its 36mm sensor to the LARGER image dimension, so 20.41° is the
@@ -48,42 +46,6 @@ function CameraRig() {
   return null
 }
 
-/** Loose motes drifting behind the type (§3.7 layer 2). */
-function Motes({ count = 220 }) {
-  const ref = useRef()
-  const geometry = useMemo(() => {
-    const positions = new Float32Array(count * 3)
-    for (let i = 0; i < count; i++) {
-      positions[i * 3 + 0] = (Math.random() - 0.5) * 26
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 14
-      positions[i * 3 + 2] = -2 - Math.random() * 12
-    }
-    const g = new THREE.BufferGeometry()
-    g.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    return g
-  }, [count])
-
-  useFrame((state) => {
-    if (!ref.current) return
-    const t = state.clock.elapsedTime
-    ref.current.rotation.z = t * 0.012
-    ref.current.position.y = Math.sin(t * 0.18) * 0.25 + scroll.value * 1.4
-  })
-
-  return (
-    <points ref={ref} geometry={geometry} frustumCulled={false}>
-      <pointsMaterial
-        size={0.085}
-        color="#F5EDEA"
-        transparent
-        opacity={0.7}
-        sizeAttenuation
-        depthWrite={false}
-      />
-    </points>
-  )
-}
-
 function SceneContents({ onPerf }) {
   return (
     <>
@@ -100,7 +62,6 @@ function SceneContents({ onPerf }) {
       <CameraRig />
 
       <Starfield />
-      <Motes />
       <NameBackdrop />
 
       <Suspense fallback={null}>
