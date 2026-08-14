@@ -37,9 +37,6 @@ export const content = {
 
   // ── Hero ───────────────────────────────────────────────────────────────────
   hero: {
-    // the giant Kulim Park numerals rendered INSIDE the WebGL scene (§3.7).
-    // Kept from the original design — they read as a graphic element, not as copy.
-    display: { left: '06', right: '04' },
     intro: ['Building for the web,', 'in three dimensions,', 'end to end.'],
     introTodo: true,
     scrollHint: 'Scroll',

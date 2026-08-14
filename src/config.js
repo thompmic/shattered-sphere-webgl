@@ -13,10 +13,9 @@
 export const CAMERA = {
   horizontalFovDeg: 20.41, // MEASURED
   // TASTE — straight-on, per the reference structure (§3.7b). The distance sets how
-  // much of the frame the subject eats: at 11.2 it filled ~79% of the height and
-  // swallowed both numerals; 14.5 brings it to ~60% so the type reads around it.
-  // The numerals hold their §3.2 size either way — they sit on their own plane, so
-  // pulling back shrinks the subject without shrinking the type.
+  // much of the frame the subject eats: at 11.2 it filled ~79% of the height; 14.5
+  // brings it to ~60% so the backdrop type reads around it. The backdrop sits on its
+  // own plane, so pulling the camera back shrinks the subject without shrinking it.
   position: [0, 0.35, 14.5],
   lookAt: [0, 0, 0],
   near: 0.1,
@@ -46,22 +45,6 @@ export const SHATTER = {
   orbitStart: 0.941, // MEASURED — radians, matches Blender frame 1
   orbitTurns: 2.1, // TASTE — how far the orb travels over a full page scroll
   burst: 1.5, // TASTE — extra outward push of the shards as you scroll away
-}
-
-// ── The display type (§3.2 / §3.7) ────────────────────────────────────────────
-// The Figma artboard is 1600×1000 and the numerals are 340px Kulim Park Light at
-// (20,30) and (790,30). We map that grid onto the world plane sitting behind the
-// subject so the sphere occludes the type — the effect the samurai reference is for.
-// Raise `scale` or pull `x` toward 0 for a more aggressive overlap.
-export const TYPE = {
-  z: -1.8, // world z, behind the subject (which spans roughly -1..1)
-  fontSizePx: 340, // MEASURED (§3.4)
-  letterSpacing: -0.04, // MEASURED — −4% tracking, defines the whole look (§3.4)
-  artboard: { w: 1600, h: 1000 }, // MEASURED (§3.1)
-  left: { text: 'left', xPx: 221, yPx: 149 }, // MEASURED — centre of the `06` box
-  right: { text: 'right', xPx: 997, yPx: 149 }, // MEASURED — centre of the `04` box
-  opacityTop: 1.0, // MEASURED — §3.5b `--display` is #FFF 100% → 18%
-  opacityBottom: 0.18,
 }
 
 // ── Scroll ────────────────────────────────────────────────────────────────────
