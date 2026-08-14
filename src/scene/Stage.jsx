@@ -1,6 +1,6 @@
-import { Suspense, useMemo, useRef } from 'react'
+import { Suspense, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Environment, Lightformer, Stars } from '@react-three/drei'
+import { Environment, Lightformer, PerformanceMonitor, Stars } from '@react-three/drei'
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { CAMERA, SCROLL } from '../config.js'
@@ -83,9 +83,19 @@ function Motes({ count = 220 }) {
   )
 }
 
-function SceneContents() {
+function SceneContents({ onPerf }) {
   return (
     <>
+      {/* Bloom at high DPR is the first thing to cost frames on an integrated GPU.
+          Rather than guess a safe resolution, measure and step it down only if the
+          machine is actually struggling. */}
+      <PerformanceMonitor
+        onDecline={() => onPerf(1)}
+        onIncline={() => onPerf(2)}
+        flipflops={3}
+        onFallback={() => onPerf(1)}
+      />
+
       <CameraRig />
 
       {/* §3.5b: a dark space field. The camera is a 20° telephoto, so a wide sparse
@@ -114,7 +124,9 @@ function SceneContents() {
       {/* rim from behind — without it the dark shell dissolves into the dark ground */}
       <directionalLight position={[1.5, 1.2, -5]} intensity={2.6} color="#ffb3a3" />
 
-      <EffectComposer disableNormalPass multisampling={4}>
+      {/* MSAA on the composer buffer is expensive and buys little here — the scene is
+          a smooth sphere against a dark field, and bloom softens the edges anyway. */}
+      <EffectComposer disableNormalPass multisampling={2}>
         {/* the core is emissive at strength 10 (§5d); a low threshold blows it out the
             moment the shell opens, so keep it high and let the bloom stay a halo */}
         <Bloom intensity={0.6} luminanceThreshold={0.72} luminanceSmoothing={0.25} mipmapBlur />
@@ -125,10 +137,12 @@ function SceneContents() {
 }
 
 export function Stage() {
+  const [dpr, setDpr] = useState(1.5)
+
   return (
     <Canvas
       className="stage-canvas"
-      dpr={[1, 1.75]}
+      dpr={dpr}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       camera={{ position: CAMERA.position, near: CAMERA.near, far: CAMERA.far, fov: 13 }}
       onCreated={({ gl }) => {
@@ -136,7 +150,7 @@ export function Stage() {
         gl.toneMappingExposure = 1.15
       }}
     >
-      <SceneContents />
+      <SceneContents onPerf={setDpr} />
     </Canvas>
   )
 }

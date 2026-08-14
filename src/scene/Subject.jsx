@@ -99,12 +99,16 @@ export function Subject() {
     uniforms.uBurst.value = Math.pow(p, 1.6) * SHATTER.burst
 
     if (group.current) {
+      // Idle motion on top of the scroll drift. Without it the sphere is completely
+      // static until you touch the wheel, which reads as a stalled render rather than
+      // as a still image. Sine-driven, so it is smooth by construction.
       group.current.position.set(
         SCROLL.subjectDrift[0] * p,
-        SCROLL.subjectDrift[1] * p,
+        SCROLL.subjectDrift[1] * p + Math.sin(t * 0.34) * 0.045,
         SCROLL.subjectDrift[2] * p,
       )
-      group.current.rotation.y = p * 0.5
+      group.current.rotation.y = t * 0.045 + p * 0.5
+      group.current.rotation.x = Math.sin(t * 0.23) * 0.02
     }
   })
 
