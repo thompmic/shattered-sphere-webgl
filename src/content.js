@@ -55,7 +55,7 @@ export const content = {
         stack: ['React Three Fiber', 'Three.js', 'GLSL', 'Blender', 'Vite'],
         links: [
           { label: 'Code', href: 'https://github.com/thompmic/shattered-sphere-webgl' },
-          // TODO: add the live URL once this site is deployed
+          { label: 'Live', href: 'https://michaelthompsondev.netlify.app/' },
         ],
         credit: 'Original concept and 3D source by @Bachynskyi_ui',
       },

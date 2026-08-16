@@ -4,7 +4,7 @@ A WebGL hero built with React Three Fiber: a fractured sphere of 700 shards that
 around an orbiting core, with the display type sitting *inside* the 3D scene so the subject
 occludes it.
 
-**Live:** _not deployed yet_ · **Stack:** Vite · React 19 · React Three Fiber · Three.js · Lenis
+**Live:** **[michaelthompsondev.netlify.app](https://michaelthompsondev.netlify.app/)** · **Stack:** Vite · React 19 · React Three Fiber · Three.js · Lenis
 
 ---
 
@@ -67,4 +67,5 @@ npm run dev
 
 ## Status
 
-Desktop-first and still being art-directed. Mobile is a later phase. All copy is placeholder.
+Live and deployed. Copy is written; the two other projects are private repos, so those
+cards carry no code link rather than a link that 404s.

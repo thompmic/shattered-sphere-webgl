@@ -31,10 +31,17 @@ installed (§9), and the user picked **Vite + React Three Fiber** (§10).
    end-to-end; what it has *not* had is a pass by eye. §12.4 lists the specific dials.
 7. ~~`git init`~~ ✅ **DONE — pushed public to
    [thompmic/shattered-sphere-webgl](https://github.com/thompmic/shattered-sphere-webgl).**
-8. **Deploy it.** The goal is a personal portfolio, and it is not live yet. `npm run build`
-   works from a clean checkout (`prebuild` regenerates `public/`), so Vercel or Netlify need no
-   config beyond "build: `npm run build`, output: `dist`". Then put the URL in the README.
-9. **Credit @Bachynskyi_ui on the site itself**, not only in the README (§2).
+8. ~~Deploy it~~ ✅ **LIVE at [michaelthompsondev.netlify.app](https://michaelthompsondev.netlify.app/)**
+   (2026-08-16). Netlify, auto-deploys on push to `main`. Verified on the live host: no failed
+   requests, `.glb` and `.wasm` both load, `.wasm` is served as `application/wasm`, the
+   immutable cache headers apply, and **zero TODO chips render in production** — which also
+   confirms the dev-only chip really is tree-shaken. 1.53 MB transferred.
+9. ~~Credit @Bachynskyi_ui on the site itself~~ ✅ in the footer (§2).
+10. **← YOU ARE HERE. Two things hold the site back, neither is code:**
+    - **Both other project repos are private**, so two of three cards have no link at all.
+      Making `thompmic/soccer-star-styles` public is the single highest-value change left.
+    - **No loading state.** The 1.1 MB glb streams in behind `Suspense fallback={null}`, so
+      the hero pops. The LCP poster idea in §5 is still the fix.
 
 ### Do not redo this work
 - The `.fig` is already fully decoded → `design-reference/figma-canvas.json`. Don't re-decode.
@@ -74,6 +81,7 @@ direction → `§9` toolchain → `§10` **framework choice, blocking** → `§7
 | **Name** | Studio One.Zero — 3D website |
 | **Root** | `C:\Users\PrimeMike\OneDrive\Desktop\3D website` — **flattened 2026-08-12**; `npm run dev` runs straight from here. The old nested `3D website\3D website` layout and the `__MACOSX` zip junk are gone |
 | **Goal** | A **full personal portfolio** — projects, about, socials, interests (§13). The shattered-sphere hero is the *opening*, not the whole site |
+| **Live** | ✅ **[michaelthompsondev.netlify.app](https://michaelthompsondev.netlify.app/)** — Netlify, auto-deploys on push to `main`, config in `netlify.toml` |
 | **Status** | **Direction locked (§6). Framework picked (§10). Toolchain verified present (§9). `.blend` fully characterized (§5). No site code written yet.** |
 | **Machine** | ✅ Arrived on the user's **Windows desktop** 2026-08-12. Windows 11, PowerShell. The old macOS paths in §4 are historical — translate them. |
 | **Stack** | **Vite + React Three Fiber** (Option A, chosen by user 2026-08-12) |
@@ -590,6 +598,17 @@ shard problem is solved at *export* (§5), not by the framework.
   driven by scroll, the frosted rail, three scroll sections. Three real bugs found and fixed by
   verification — the `_SHARDC` coordinate space, the `core002` node-name collision, and the
   spin-matrix basis change (**§12.2**). **Not yet judged by eye** — see §12.4. Still no `git init`.
+- **2026-08-16 (live)** — **Deployed to
+  [michaelthompsondev.netlify.app](https://michaelthompsondev.netlify.app/)** and verified on
+  the live host. All copy written: About and Interests from the user's own four interests,
+  Skills derived from the three real projects, contact address
+  `michael.dev.0365@gmail.com` (a dedicated account chosen over the personal one, since
+  anything on a public page gets scraped), role confirmed as Creative Developer. **Zero
+  placeholder chips remain.** The Watchers and Soccer Star Styles were added from repo-derived
+  breakdowns (§13.5 prompt) — **both repos are private**, verified with `gh repo view`, so
+  both cards ship with no code link rather than one that 404s. `public/og.png` generated from
+  the real scene at 1200×630, framed wider than the live hero so the wordmark stays readable
+  in a static preview.
 - **2026-08-13 (art direction round 2)** — Five requested changes, each verified by
   rendering and looking (§12.6): scroll/scene motion damped, subject given idle motion,
   `06`/`04` removed, a **brush-painted `MICHAEL THOMPSON` backdrop** added behind the

@@ -5,22 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#07060B" />
 
-    <!-- TODO: replace with the real title/description once the copy is written, and
-         set og:url + og:image after the first deploy. og:image is deliberately
-         omitted rather than pointed at a file that does not exist yet. -->
     <title>Michael Thompson — Creative Developer</title>
     <meta
       name="description"
       content="Personal portfolio of Michael Thompson — web engineering, real-time 3D and interface work."
     />
 
+    <!-- og:image is a 1200×630 render of the real scene. It is framed differently
+         from the live hero on purpose: the site lets the sphere cut through the
+         name, which is the whole effect in motion but leaves the wordmark
+         unreadable in a static link preview. Absolute URLs are required — most
+         scrapers do not resolve relative ones. -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://michaelthompsondev.netlify.app/" />
     <meta property="og:title" content="Michael Thompson — Creative Developer" />
     <meta
       property="og:description"
       content="Personal portfolio — web engineering, real-time 3D and interface work."
     />
+    <meta property="og:image" content="https://michaelthompsondev.netlify.app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The name Michael Thompson painted in white brush strokes above a fractured red sphere in space." />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://michaelthompsondev.netlify.app/og.png" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
