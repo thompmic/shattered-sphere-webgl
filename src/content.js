@@ -90,13 +90,14 @@ export const content = {
   // ── About ──────────────────────────────────────────────────────────────────
   about: {
     title: 'About',
-    // 2–3 short paragraphs, first person. What you do, how you got here, what you
-    // care about in the work. Avoid buzzwords — write how you talk.
+    // Drafted from the four things Michael named: cars, music, web design, and
+    // working on new ideas. The facts are his; the phrasing is a first pass —
+    // read it aloud and change anything that does not sound like you.
     body: [
-      'Replace this with a couple of paragraphs about yourself: what you build, what drew you to it, and what you are looking for next.',
-      'A second paragraph is a good place for the human part — how you work, what you are curious about, what you are learning right now.',
+      'I build for the web. What pulls me in is the design side as much as the code — how a page moves, how it feels under your hands, whether it has any character to it. A site that works but feels like nothing is only half finished.',
+      'Away from the screen it is mostly cars and music. Both are the same thing to me really: a lot of small decisions adding up to something you can feel immediately, even if you cannot explain why it works.',
+      'I am usually in the middle of a new idea. This site is one of them.',
     ],
-    bodyTodo: true,
   },
 
   // ── Skills ─────────────────────────────────────────────────────────────────
@@ -116,11 +117,23 @@ export const content = {
   interests: {
     title: 'Beyond the screen',
     intro: 'What I spend time on when I am not building.',
-    introTodo: true,
     items: [
-      { label: 'TODO', note: 'Replace with something you actually do.', todo: true },
-      { label: 'TODO', note: 'Three or four is plenty. Specific beats generic.', todo: true },
-      { label: 'TODO', note: 'This is the section that makes you a person, not a CV.', todo: true },
+      {
+        label: 'Cars',
+        note: 'The engineering as much as the driving — how something is put together and why it behaves the way it does.',
+      },
+      {
+        label: 'Music',
+        note: 'Always on while I work, and a big part of how I think about pacing and rhythm in an interface.',
+      },
+      {
+        label: 'Web design',
+        note: 'Layout, type and motion. The part of the job I would still do if nobody were paying me for it.',
+      },
+      {
+        label: 'New ideas',
+        note: 'There is usually something half-built on my machine. Starting is the easy part.',
+      },
     ],
   },
 
