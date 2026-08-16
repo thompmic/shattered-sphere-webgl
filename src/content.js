@@ -64,11 +64,14 @@ export const content = {
         ],
         credit: 'Original concept and 3D source by @Bachynskyi_ui',
       },
+      // The two below are placeholders with the right NAMES only. Run the
+      // "portfolio entry" prompt in AGENTS.md §13.5 inside each project, then
+      // paste the object it returns over the matching entry here.
       {
         year: 'TODO',
-        title: 'Second Project',
+        title: 'The Watchers',
         summary:
-          'Replace with a real project. Lead with the problem, then what you actually built, then the outcome. Two sentences is plenty.',
+          'Awaiting the breakdown — run the AGENTS.md §13.5 prompt inside this project and paste the result here.',
         role: 'TODO — what was your part?',
         stack: ['TODO'],
         links: [],
@@ -76,9 +79,9 @@ export const content = {
       },
       {
         year: 'TODO',
-        title: 'Third Project',
+        title: 'Soccer Star',
         summary:
-          'Replace with a real project. If you have fewer than three worth showing, delete this entry — three strong is better than three padded.',
+          'Awaiting the breakdown — run the AGENTS.md §13.5 prompt inside this project and paste the result here.',
         role: 'TODO — what was your part?',
         stack: ['TODO'],
         links: [],
@@ -153,8 +156,7 @@ export const content = {
   // `href: null` renders the link as disabled + flagged, so nothing points at '#'.
   social: [
     { label: 'GitHub', short: 'GH', href: 'https://github.com/thompmic' },
-    { label: 'LinkedIn', short: 'IN', href: null, todo: true },
-    { label: 'Instagram', short: 'IG', href: null, todo: true },
+    { label: 'LinkedIn', short: 'IN', href: 'https://www.linkedin.com/in/michael-thompson-160082248/' },
   ],
 
   footer: {

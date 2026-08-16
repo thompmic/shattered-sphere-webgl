@@ -828,6 +828,55 @@ hidden tab has no `requestAnimationFrame`: **Lenis anchor scrolling from the nav
 of it actually *looks*. The click handler was confirmed to fire and suppress the native jump,
 so the wiring is right, but watch the nav scroll on the first real run.
 
+### 13.5 The "portfolio entry" prompt (reusable)
+
+Paste this into Claude Code **inside another project's folder**. It returns a ready
+object to drop straight into `work.projects` in `src/content.js`. Reuse it for every
+future project so the entries stay consistent.
+
+```
+Read this project and write a portfolio entry for it.
+
+Work only from what is actually in the repo — README, package.json / requirements
+/ go.mod, the source tree, and the git history. Do NOT invent features, dates,
+metrics, users, or a job title. If you cannot determine something, put the literal
+string "TODO" in that field rather than guessing. An honest gap is fine; a made-up
+detail on a public portfolio is not.
+
+Inspect, in this order:
+1. README and any docs, for the intent
+2. the dependency manifest, for the real stack (what is imported, not what is listed)
+3. the source tree, for what was actually built vs scaffolded
+4. `git log` — first and last commit dates, and roughly what share of commits are
+   mine (my GitHub username is thompmic) so the `role` line is honest about
+   whether this was solo or a team project
+5. any deploy config or live URL
+
+Then return ONLY a JavaScript object in exactly this shape, no prose around it:
+
+{
+  year: '',        // e.g. '2025' or '2024–25'. From git history, not a guess.
+  title: '',       // the project's real name
+  summary: '',     // TWO SENTENCES MAX. Sentence 1: the problem or the idea.
+                   // Sentence 2: what was actually built. No adjectives like
+                   // "innovative" or "cutting-edge" — say what it does.
+  role: '',        // what *I* personally did. If it was a team project, say so
+                   // and name my part specifically.
+  stack: [],       // real technologies, most important first, max 6
+  links: [],       // [{ label: 'Code', href: '...' }, { label: 'Live', href: '...' }]
+                   // omit any link that does not exist — never use '#'
+}
+
+Then, separately, list:
+- anything you had to mark TODO and what I would need to tell you to fill it
+- the single most interesting technical decision in this project, in one
+  sentence, in case it is worth calling out on the site
+```
+
+**Why the constraints matter:** the summary is rendered in a card at 15px, so
+anything past two sentences gets skimmed and wastes the slot. And `role` is the field
+recruiters actually read — "what I did" beats "what the project was" every time.
+
 ### 13.4 The one hard blocker
 
 **Real content.** Everything above is scaffolding around facts only the user has: his name and
