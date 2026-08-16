@@ -102,15 +102,19 @@ export const content = {
   },
 
   // ── Skills ─────────────────────────────────────────────────────────────────
+  // Every item here is used in one of the three projects above — nothing is listed
+  // on the strength of having read about it. That is deliberate: a skills list you
+  // can point at real work is worth more than a long one you cannot. Add to it as
+  // you ship, and delete anything you would not want to be interviewed on.
   skills: {
     title: 'Skills',
-    intro: 'Things I work with day to day.',
-    introTodo: true,
+    intro: 'Everything here is something I have actually shipped with, not just read about.',
     groups: [
-      { label: 'Languages', items: ['TODO', 'TODO', 'TODO'], todo: true },
-      { label: 'Frameworks', items: ['React', 'TODO', 'TODO'], todo: true },
-      { label: '3D & Graphics', items: ['Three.js', 'React Three Fiber', 'GLSL', 'Blender'] },
-      { label: 'Tools', items: ['Git', 'Vite', 'TODO'], todo: true },
+      { label: 'Languages', items: ['TypeScript', 'JavaScript', 'SQL'] },
+      { label: 'Frontend', items: ['React', 'React Native', 'Expo', 'Vite'] },
+      { label: '3D & graphics', items: ['Three.js', 'React Three Fiber', 'GLSL', 'Blender'] },
+      { label: 'Backend & data', items: ['Node.js', 'Fastify', 'PostgreSQL', 'Redis', 'Kafka'] },
+      { label: 'Tooling', items: ['Git', 'Docker', 'Turborepo'] },
     ],
   },
 
@@ -141,13 +145,15 @@ export const content = {
   // ── Contact ────────────────────────────────────────────────────────────────
   contact: {
     title: 'Get in touch',
-    body: 'Open to new work and interesting problems. The fastest way to reach me is email.',
-    bodyTodo: true,
-    // TODO: decide which address to publish. Your personal Gmail was deliberately
-    // NOT hardcoded here — publishing it on a public site invites scrapers. A
-    // dedicated address, or a contact form, is usually the better call.
+    body: 'Open to new work — front-end, real-time 3D, or anything where how it feels matters as much as whether it works. I read everything that comes in.',
+    // Set this to publish an email. It is null on purpose: an address on a public
+    // page gets scraped within days, so this should be a deliberate choice rather
+    // than a default. Until it is set the button renders visibly disabled instead
+    // of pretending to work.
     email: null,
-    resume: null, // TODO: e.g. '/michael-thompson-cv.pdf' — put the file in public/
+    // e.g. '/michael-thompson-cv.pdf' — drop the file in public/ and put the path
+    // here, and the Download CV button appears. Hidden entirely while null.
+    resume: null,
   },
 
   // ── Socials ────────────────────────────────────────────────────────────────
