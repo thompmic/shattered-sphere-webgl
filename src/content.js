@@ -48,7 +48,6 @@ export const content = {
   work: {
     title: 'Selected Work',
     intro: 'A few things I have built recently.',
-    introTodo: true,
     projects: [
       {
         // This one is real — it is the hero of this very site.
@@ -64,28 +63,27 @@ export const content = {
         ],
         credit: 'Original concept and 3D source by @Bachynskyi_ui',
       },
-      // The two below are placeholders with the right NAMES only. Run the
-      // "portfolio entry" prompt in AGENTS.md §13.5 inside each project, then
-      // paste the object it returns over the matching entry here.
       {
-        year: 'TODO',
+        year: '2026',
         title: 'The Watchers',
         summary:
-          'Awaiting the breakdown — run the AGENTS.md §13.5 prompt inside this project and paste the result here.',
-        role: 'TODO — what was your part?',
-        stack: ['TODO'],
+          'A browser-based simulation of a stylized city, intended as a real-time world players can zoom into and inspect. The pushed repo contains the backend foundation: Docker Compose dev infra (Postgres 16, Redis 7, Kafka, Zookeeper, pgAdmin), a 12-table PostgreSQL schema with typed query helpers, and a Fastify API gateway with JWT auth and stub routes for the downstream services.',
+        role: 'Solo build. All 16 commits (April 2026) are mine — monorepo scaffold, Docker infra, DB schema and seed data, the typed helpers package, the gateway, and the JWT auth middleware.',
+        stack: ['TypeScript', 'Fastify', 'PostgreSQL', 'Docker Compose', 'Turborepo'],
+        // ⚠️ github.com/The-watchers01/the-watchers is PRIVATE — verified with
+        // `gh repo view`. Linking it would 404 for every visitor, which looks
+        // worse than no link. Restore this once the repo is public.
         links: [],
-        todo: true,
       },
       {
-        year: 'TODO',
-        title: 'Soccer Star',
+        year: '2026',
+        title: 'Soccer Star Styles',
         summary:
-          'Awaiting the breakdown — run the AGENTS.md §13.5 prompt inside this project and paste the result here.',
-        role: 'TODO — what was your part?',
-        stack: ['TODO'],
+          'People bring reference photos to the barber, but hairstyle inspiration for football fans is scattered across image searches and social posts. A cross-platform mobile app cataloguing professional players\' hairstyles year by year, each cut shown with a spec sheet (fade level, length, colour) and a "show your barber" checklist.',
+        role: 'Sole author, all 9 commits. Built the 5-tab navigation, the light/dark theme system, a parametric SVG avatar renderer used as fallback artwork, the players/styles/favorites data layer with on-device persistence, and a Node script that generates a 613-player searchable directory from league salary tables.',
+        stack: ['TypeScript', 'React Native', 'Expo', 'react-native-svg', 'AsyncStorage'],
+        // ⚠️ github.com/thompmic/soccer-star-styles is also PRIVATE — same reasoning.
         links: [],
-        todo: true,
       },
     ],
   },
