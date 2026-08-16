@@ -17,13 +17,8 @@ export const content = {
   // ── Identity ───────────────────────────────────────────────────────────────
   identity: {
     name: 'Michael Thompson',
-    // TODO: your actual title. Examples: "Creative Developer", "Software Engineer",
-    // "Full-Stack Developer, 3D & Web". This shows directly under your name.
-    role: 'Creative Developer',
-    roleTodo: true,
-    // one line, the first thing anyone reads. Say what you do and who for.
+    role: 'Creative Developer', // confirmed 2026-08-15
     tagline: 'I build things for the web that move.',
-    taglineTodo: true,
   },
 
   nav: [
@@ -36,9 +31,10 @@ export const content = {
   cta: { label: 'Get In Touch', href: '#contact' },
 
   // ── Hero ───────────────────────────────────────────────────────────────────
+  // Three short lines, set small at the top-left of the hero. Keep them short —
+  // they sit beside the painted name, and anything longer competes with it.
   hero: {
-    intro: ['Building for the web,', 'in three dimensions,', 'end to end.'],
-    introTodo: true,
+    intro: ['Front-end and real-time 3D.', 'Built for how it feels,', 'not just whether it works.'],
     scrollHint: 'Scroll',
   },
 
@@ -146,11 +142,11 @@ export const content = {
   contact: {
     title: 'Get in touch',
     body: 'Open to new work — front-end, real-time 3D, or anything where how it feels matters as much as whether it works. I read everything that comes in.',
-    // Set this to publish an email. It is null on purpose: an address on a public
-    // page gets scraped within days, so this should be a deliberate choice rather
-    // than a default. Until it is set the button renders visibly disabled instead
-    // of pretending to work.
-    email: null,
+    // A dedicated address, chosen deliberately over the personal one: anything on
+    // a public page gets scraped within days, and this can be abandoned without
+    // losing a real inbox. That is the mitigation — do not swap in a personal
+    // address here later.
+    email: 'michael.dev.0365@gmail.com',
     // e.g. '/michael-thompson-cv.pdf' — drop the file in public/ and put the path
     // here, and the Download CV button appears. Hidden entirely while null.
     resume: null,
