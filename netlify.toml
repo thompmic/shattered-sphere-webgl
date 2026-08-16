@@ -1,0 +1,42 @@
+# Netlify deploy config.
+#
+# Keeping this in the repo rather than in the site UI means the build is
+# reproducible and reviewable — and a wrong setting shows up in a diff.
+
+[build]
+  # `build` runs `prebuild` first, which copies the .glb and the Draco decoder
+  # into public/. That directory is gitignored precisely because it is generated,
+  # so this step is what makes a clean checkout build correctly.
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite 6 requires ^18 || ^20 || >=22 — it does NOT support odd-numbered Node
+  # releases like 21. Pin an LTS so a change to Netlify's default cannot break
+  # the build silently.
+  NODE_VERSION = "22"
+
+# Vite fingerprints everything in /assets, so these can be cached forever.
+[[headers]]
+  for = "/assets/*"
+
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The model and the Draco decoder are NOT content-hashed — they keep the same
+# URL across deploys. Cache them for a day rather than a year, so re-exporting
+# the .glb actually reaches people instead of being pinned in browser caches.
+[[headers]]
+  for = "/models/*"
+
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/draco/*"
+
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# No SPA redirect on purpose: this is a single page and every link is a
+# same-page anchor. A catch-all 200 rewrite would only hide genuine 404s.
