@@ -46,7 +46,7 @@ function CameraRig() {
   return null
 }
 
-function SceneContents({ onPerf }) {
+function SceneContents({ onPerf, onReady }) {
   return (
     <>
       {/* Bloom at high DPR is the first thing to cost frames on an integrated GPU.
@@ -65,7 +65,7 @@ function SceneContents({ onPerf }) {
       <NameBackdrop />
 
       <Suspense fallback={null}>
-        <Subject />
+        <Subject onReady={onReady} />
       </Suspense>
 
       {/* Procedural environment — no HDR download. The shards are metallic 0.71, so
@@ -94,7 +94,7 @@ function SceneContents({ onPerf }) {
   )
 }
 
-export function Stage() {
+export function Stage({ onReady }) {
   const [dpr, setDpr] = useState(1.5)
 
   return (
@@ -108,7 +108,7 @@ export function Stage() {
         gl.toneMappingExposure = 1.15
       }}
     >
-      <SceneContents onPerf={setDpr} />
+      <SceneContents onPerf={setDpr} onReady={onReady} />
     </Canvas>
   )
 }

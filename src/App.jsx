@@ -1,11 +1,23 @@
-import { useEffect, useRef } from 'react'
-import { Stage } from './scene/Stage.jsx'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+
 import { Nav, HeroCopy, RightRail } from './ui/Chrome.jsx'
 import { Sections } from './ui/Sections.jsx'
 import { startScroll, scroll } from './scroll.js'
 
+/**
+ * The 3D scene is code-split on purpose.
+ *
+ * Imported statically, three + drei + postprocessing (~347 KB brotli, ~1.2 MB
+ * parsed) had to download AND execute before React could render a single DOM
+ * node — so the text content could not paint until the entire WebGL engine was
+ * ready. Loading it lazily lets the page paint from the small entry chunk and
+ * streams the scene in behind it.
+ */
+const Stage = lazy(() => import('./scene/Stage.jsx').then((m) => ({ default: m.Stage })))
+
 export default function App() {
   const chrome = useRef()
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     // the browser restoring a mid-page scroll on reload leaves the hero already
@@ -46,8 +58,10 @@ export default function App() {
         MichaelThompson
       </span>
 
-      <div className="stage" id="top">
-        <Stage />
+      <div className="stage" id="top" data-ready={ready}>
+        <Suspense fallback={null}>
+          <Stage onReady={() => setReady(true)} />
+        </Suspense>
       </div>
 
       <div className="chrome" ref={chrome} data-scrolled="false">

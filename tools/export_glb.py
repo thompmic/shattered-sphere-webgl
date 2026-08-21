@@ -15,7 +15,19 @@ NEVER saves over 22.blend.
 import bpy, json, os
 import numpy as np
 
-OUT_DIR = r"C:\Users\PrimeMike\OneDrive\Desktop\3D website\3D website\export"
+# -- Wire cage detail ---------------------------------------------------------
+# The Wireframe modifier turns every edge into an 8-triangle tube, so cage cost is
+# ~(base polys x 4**SUBSURF) x 8. At subsurf 2 that was 63,488 tris and 624 KB --
+# 57% of the entire model -- for geometry only ever glimpsed through the dissolve
+# hole. Dropping to 1 is a 4x cut that is close to invisible at the size it
+# renders; the thickness bump keeps the wires at the same visual weight.
+CAGE_SUBSURF = 1
+CAGE_THICKNESS = 0.008
+
+# NOTE: this path went stale when the project was flattened -- it still pointed at
+# the old nested "3D website\3D website" folder, so a re-export silently wrote to
+# a directory nothing reads from.
+OUT_DIR = r"C:\Users\PrimeMike\OneDrive\Desktop\3D website\export"
 os.makedirs(OUT_DIR, exist_ok=True)
 GLB = os.path.join(OUT_DIR, "hero.glb")
 GLB_DRACO = os.path.join(OUT_DIR, "hero.draco.glb")
@@ -132,7 +144,13 @@ pieces = [make_shard_mesh('hero_shards', V, T, bpy.data.materials['cell'],
                           {'_shardc': ('FLOAT_VECTOR', C), '_shardr': ('FLOAT', R)})]
 
 # ---------------------------------------------------------------- 2. the other pieces
-cage, cv, cp = bake_object(bpy.data.objects['Sphere'], 'hero_cage',
+_sphere = bpy.data.objects['Sphere']
+for _m in _sphere.modifiers:
+    if _m.type == 'SUBSURF':
+        _m.levels = CAGE_SUBSURF
+    elif _m.type == 'WIREFRAME':
+        _m.thickness = CAGE_THICKNESS
+cage, cv, cp = bake_object(_sphere, 'hero_cage',
                            bpy.data.materials['lines'], skip_geonodes=True)
 core, ov, op = bake_object(bpy.data.objects['core'], 'hero_core', bpy.data.materials['Material.001'])
 orb,  bv, bp = bake_object(bpy.data.objects['fly'], 'hero_orb', bpy.data.materials['fly'],

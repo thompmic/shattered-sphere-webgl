@@ -768,6 +768,42 @@ never fetched for Latin text — so the bare check reports false forever. There 
 an off-screen `.brush-preload` span, because a font only ever drawn into a canvas can
 sit unfetched: `fonts.load()` alone is not a reliable trigger.
 
+### 12.8 Load performance (2026-08-16)
+
+Measured, not guessed. Two independent problems, two independent fixes.
+
+**1. The wire cage was 57% of the model.** `tools/glbsize`-style inspection of the
+per-primitive Draco bufferViews: `hero_cage` was **624 KB of a 1105 KB file** — more
+than the 700 shards themselves — for geometry only ever glimpsed through the
+dissolve hole. The Wireframe modifier turns every edge into an 8-triangle tube, so
+cost is `(base polys x 4**SUBSURF) x 8`. Dropping `CAGE_SUBSURF` from 2 to 1 is a 4x
+cut (63,488 -> 15,872 tris) and, rendered at the size it actually appears, **looks
+better** — the grid now reads as a wireframe instead of a dense white blur.
+
+    model 1105 KB -> 643 KB   (-42%)
+    scene 112,883 -> 65,267 tris
+
+**2. The 3D engine blocked first paint.** `App.jsx` statically imported `Stage.jsx`,
+so three + drei + postprocessing (~347 KB brotli, ~1.2 MB parsed) had to download AND
+execute before React rendered a single DOM node. `Stage` is now `React.lazy`, which
+takes the **entry chunk from ~1.29 MB raw to 33 KB** (11 KB gzip). Vite still emits
+`modulepreload` for the 3D chunks, which is what you want: a hint, not a blocking
+dependency, so they download in parallel without holding up the paint. Verified in
+dev — DOM content is present at 481 ms while three/fiber/drei land at 700–745 ms.
+
+The canvas now fades in on a `data-ready` flag set when the model has actually
+decoded (`Subject` sits behind Suspense, so reaching its effect proves it), instead
+of appearing in a single frame.
+
+⚠️ **Do not "optimise" the `<link rel="preload" as="fetch">` for the glb.** It looks
+like a candidate for a credentials-mode mismatch that would double-fetch 643 KB;
+it was checked, and there is exactly **one** request, `initiatorType: "link"` — the
+loader reuses the preload.
+
+Still available if load time ever matters more: `draco_decoder.js` (500 KB) ships but
+is never fetched by a wasm-capable browser, and the shards themselves are now the
+floor at 461 KB.
+
 ### 12.5 Known gaps
 
 - **Mobile is untouched** — deliberate (§6 answer 4). The `@media (max-width: 900px)` block

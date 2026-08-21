@@ -123,9 +123,18 @@ a {
   z-index: 0;
 }
 
+/* The canvas fades in once the model is decoded (App sets data-ready). Without
+   this the scene appears in one frame, which reads as a glitch rather than as a
+   load. The CSS nebula underneath is what the visitor sees until then. */
 .stage-canvas {
   position: absolute;
   inset: 0;
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+.stage[data-ready='true'] .stage-canvas {
+  opacity: 1;
 }
 
 /* ── Fixed chrome ─────────────────────────────────────────────────────────── */

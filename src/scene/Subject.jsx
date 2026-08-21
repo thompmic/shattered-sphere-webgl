@@ -26,7 +26,7 @@ function takeAttribute(geometry, gltfName, newName) {
   return true
 }
 
-export function Subject() {
+export function Subject({ onReady }) {
   const group = useRef()
   const { nodes } = useGLTF(MODEL, '/draco/')
 
@@ -63,6 +63,12 @@ export function Subject() {
       uniforms,
     }
   }, [nodes])
+
+  // useGLTF suspends, so reaching this effect means the model is fetched AND
+  // Draco-decoded — the earliest honest moment to fade the canvas in.
+  useEffect(() => {
+    onReady?.()
+  }, [onReady])
 
   // the emissive core drives the bloom; glTF clamps emissive to the base factor
   useEffect(() => {
