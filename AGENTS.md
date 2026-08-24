@@ -804,6 +804,49 @@ Still available if load time ever matters more: `draco_decoder.js` (500 KB) ship
 is never fetched by a wasm-capable browser, and the shards themselves are now the
 floor at 461 KB.
 
+### 12.9 The rail animation (2026-08-23)
+
+The "Get In Touch" rail was an empty glass column. It now holds a looping clip of a
+character walking in, putting on headphones and sitting down to code.
+
+**The box was resized to fit the footage, not the other way round.** The clip is
+784x1172 (~2:3); the old rail was a full-height 190px column, i.e. ~1:3 at a 720p
+window and ~1:5 at 1080p. Fitting 2:3 into that without zooming left **242-506px of
+empty glass** — the exact problem the animation was meant to solve. So `.rail` is now
+a content-height card (248px wide) whose `.rail-media` block carries the video's
+**exact** aspect ratio, which makes `object-fit: contain` fill it edge to edge: no
+zoom, no crop, no letterbox. The social icons are overlaid on the video over a bottom
+scrim. If the clip is ever replaced, **update `aspect-ratio` in `.rail-media` to match
+the new source** or the letterboxing comes back.
+
+**Encoding.** The source was **5,550 KB** — larger than the rest of the site combined.
+There is no ffmpeg on this machine and **Blender 5.2 has no FFmpeg video output at
+all** (its `file_format` enum is images only), so the transcode was done in-browser:
+canvas + `MediaRecorder` at `video/mp4;codecs=avc1`, 392x586, ~500 kbps, audio
+dropped. Result **148 KB — 97% smaller**, visually indistinguishable at display size.
+
+⚠️ **If you re-encode this way, drive it with real-time playback, not per-frame
+seeking.** MediaRecorder timestamps frames by wall clock, and seeking each frame is
+slower than the frame interval, so the first attempt stretched a 6.04s clip to 8.67s.
+Playing at 1x and sampling the canvas paces itself correctly (6.04s -> 6.07s), and
+media playback keeps running in a hidden tab where rAF does not.
+
+**Three render states**, resolved in the `useState` initialiser so the wrong asset
+never begins downloading:
+- `video` — the loop
+- `still` — `prefers-reduced-motion`: shows `rail-poster.jpg`, because an empty box is
+  what this whole feature exists to fix
+- `none` — under 901px the rail is `display:none`, and a hidden `<video autoplay>`
+  still downloads. Verified on a fresh mobile load: **zero rail assets fetched**.
+
+The video also **pauses when the chrome scrolls away** (MutationObserver on the
+`data-scrolled` flag App already sets) rather than decoding for as long as someone
+reads the page.
+
+**Known:** the clip carries a *KlingAI 3.0* watermark, bottom-right. It is dimmed by
+the icon scrim but still visible. Not removed — trimming it would mean cropping the
+frame, which the brief explicitly ruled out.
+
 ### 12.5 Known gaps
 
 - **Mobile is untouched** — deliberate (§6 answer 4). The `@media (max-width: 900px)` block
