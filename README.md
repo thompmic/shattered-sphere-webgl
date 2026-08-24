@@ -23,6 +23,12 @@ What's mine is the engineering: decoding the `.fig` and `.blend` into a spec, co
 shard geometry so it runs in a browser, reproducing the geometry-node effect as a vertex
 shader, and building the site around it.
 
+## How it was built
+
+**[Read the full build diary →](docs/HOW-IT-WAS-BUILT.md)** — what we made, what went wrong,
+and why the fixes worked. Written to be learned from: eight "traps" are flagged along the way,
+each one a failure that produced a plausible-looking wrong answer instead of an error.
+
 ## The interesting part
 
 The Blender scene shatters via a geometry-node graph: an orbiting orb drives a proximity

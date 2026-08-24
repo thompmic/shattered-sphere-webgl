@@ -11,6 +11,10 @@
 laptop→desktop move is done, the toolchain is installed, and the framework question is
 answered. **This file is still the entire handover — no chat history carries over.**
 
+### Want the narrative rather than the spec?
+`docs/HOW-IT-WAS-BUILT.md` is the build diary — the reasoning, the dead ends and the traps,
+in plain language. This file is the reference; that one is the story.
+
 ### Where we are in one paragraph
 The folder held a Figma file, a Blender scene, a font and a video — **no code**. Three sessions
 of investigation have happened: the `.fig` was reverse-engineered into an exact design spec
