@@ -91,7 +91,7 @@ export const content = {
     // working on new ideas. The facts are his; the phrasing is a first pass —
     // read it aloud and change anything that does not sound like you.
     body: [
-      'I was to be a software Engineer. What pulls me in is the design side as much as the code — how a page moves, how it feels under your hands, whether it has any character to it. A site that works but feels like nothing is only half finished.',
+      'I want to be a Software Engineer. What pulls me in is the design side as much as the code — how a page moves, how it feels under your hands, whether it has any character to it. A site that works but feels like nothing is only half finished.',
       'Away from the screen it is mostly cars and music. Both are the same thing to me really: a lot of small decisions adding up to something you can feel immediately, even if you cannot explain why it works.',
       'I am usually in the middle of a new idea. This site is one of them.',
     ],
