@@ -6,7 +6,10 @@ check_A_original.png, the shader math is correct.
 import bpy, os, numpy as np
 from mathutils import Euler
 
-OUT = r"C:\Users\PrimeMike\OneDrive\Desktop\3D website\3D website\export"
+# NOTE: like export_glb.py, this path went stale when the project was flattened -- it
+# still pointed at the old nested "3D website\3D website" folder, so the check render
+# was written to a directory nothing reads from.
+OUT = r"C:\Users\PrimeMike\OneDrive\Desktop\3D website\export"
 scene = bpy.data.scenes['Scene']
 bpy.context.window.scene = scene
 scene.render.engine = 'BLENDER_EEVEE'

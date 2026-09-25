@@ -14,13 +14,3 @@ export function Todo({ label = 'TODO' }) {
     </span>
   )
 }
-
-/** Convenience: render children, appending a chip when `when` is true. */
-export function MaybeTodo({ when, children }) {
-  return (
-    <>
-      {children}
-      {when ? <Todo /> : null}
-    </>
-  )
-}

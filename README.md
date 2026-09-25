@@ -47,7 +47,7 @@ float ramp = clamp((0.8068 - f) / (0.8068 - 0.3955), 0.0, 1.0);  // 1 intact, 0 
 float ang  = 14.1 * (1.0 - ramp);
 ```
 
-**One draw call for the whole shell**, 112,883 triangles for the entire scene, and a 1.1 MB
+**One draw call for the whole shell**, 65,267 triangles for the entire scene, and a 643 KB
 Draco-compressed model. The shader maths was verified by applying it in numpy and comparing
 the render against the untouched Blender scene.
 
