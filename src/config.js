@@ -111,6 +111,24 @@ export const NAME = {
   spatter: 70,
 }
 
+// ── Splash ──────────────────────────────────────────────────────────────────
+// All TASTE. The three numbers interact, so change them together:
+//
+//   minMs  a floor on how long the splash stays. Without it a warm cache lifts
+//          the splash in ~200ms and the quote is gone before it is read, which
+//          is worse than no quote at all. Read a short line aloud: ~1.6s.
+//   maxMs  a ceiling. If the model 404s or the GPU refuses the context, `ready`
+//          never fires — without this the splash seals the site shut. It must
+//          always be possible to get past this screen.
+//   fadeMs how long the lift takes, and how long the node lingers before it is
+//          unmounted. Keep these equal or the overlay eats clicks after it is
+//          invisible.
+export const SPLASH = {
+  minMs: 1600,
+  maxMs: 9000,
+  fadeMs: 620,
+}
+
 // ── Scroll ────────────────────────────────────────────────────────────────────
 export const SCROLL = {
   lerp: 0.075, // Lenis: how hard it smooths the page scroll itself

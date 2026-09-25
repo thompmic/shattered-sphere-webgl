@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 
 import { Nav, HeroCopy, RightRail } from './ui/Chrome.jsx'
 import { Sections } from './ui/Sections.jsx'
+import { Splash } from './ui/Splash.jsx'
 import { startScroll, scroll } from './scroll.js'
 
 /**
@@ -46,6 +47,8 @@ export default function App() {
 
   return (
     <>
+      <Splash ready={ready} />
+
       <a className="skip-link" href="#work">
         Skip to content
       </a>

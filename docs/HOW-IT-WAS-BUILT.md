@@ -606,7 +606,8 @@ to fit something, check whether the thing you are fitting it *into* is actually 
 
 - **Two of three project repos are private**, so those cards carry no link rather than a broken
   one. Making them public is the highest-value change left.
-- **No loading state** for the model — the hero still pops in.
+- ~~**No loading state**~~ — a splash screen now covers the wait (added 2026-09-24). It hides
+  the load rather than shortening it; the JS parse and the Draco decode are unchanged.
 - The rail clip carries a **KlingAI watermark**, dimmed but visible.
 - Scroll smoothness has a dial (`SCROLL.damping`) that wants a pass with a real hand on a real
   wheel.

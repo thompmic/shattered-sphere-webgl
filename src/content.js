@@ -38,6 +38,55 @@ export const content = {
     scrollHint: 'Scroll',
   },
 
+  // ── Splash ───────────────────────────────────────────────────────────────
+  // Shown while the 3D streams in. One quote is picked at random per page load.
+  //
+  // Keep them SHORT — the whole thing is on screen for about two seconds, and a
+  // quote nobody finishes reading is just a delay. Two lines maximum.
+  //
+  // Tone: dry. The rest of the site does not oversell itself and neither should
+  // this. Nothing with an exclamation mark.
+  splash: {
+    greeting: 'Welcome.',
+    subtitle: 'Building the scene — one moment.',
+    skipLabel: 'Skip',
+    a11yLabel: 'Loading the 3D scene',
+
+    quotes: [
+      // — developer in-jokes —
+      { line: 'It works on my machine.', by: 'every developer, ever' },
+      {
+        line: 'There are two hard problems in computer science: cache invalidation, naming things, and off-by-one errors.',
+      },
+      { line: 'Weeks of coding can save you hours of planning.' },
+      {
+        line: '99 little bugs in the code. Take one down, patch it around — 127 little bugs in the code.',
+      },
+      { line: 'It is not a bug. It is an undocumented feature.' },
+      {
+        line: 'Programming is 10% writing code and 90% working out why it does not run.',
+      },
+      { line: 'A user interface is like a joke. If you have to explain it, it is not that good.' },
+
+      // — about this site specifically —
+      { line: '700 shards are getting into position. They are doing their best.' },
+      { line: 'Somewhere in here a vertex shader is having a genuinely difficult time.' },
+      { line: 'Loading 65,267 triangles. Please enjoy this sentence while they arrange themselves.' },
+      {
+        line: 'This sphere survived a coordinate-space bug, a silent object rename, and a rotation that did not make it through a basis change.',
+      },
+      { line: 'Yes, it is a real 3D scene. No, there was no easy way to do it.' },
+      { line: 'The wire cage used to be 57% of this download. It has been spoken to.' },
+      { line: 'Every number behind this was measured in Blender. None of them were guessed.' },
+
+      // — general —
+      { line: 'Patience is what you have when there are too many witnesses.' },
+      { line: 'Everything takes longer than you expect, including this sentence.' },
+      { line: 'I am not slow. I am buffering dramatically.' },
+      { line: 'Good things come to those who wait. This is at least a decent thing.' },
+    ],
+  },
+
   // ── Work ───────────────────────────────────────────────────────────────────
   // The core of the portfolio. Two or three strong entries beat six weak ones.
   // Each: what it is, what YOU did, what it is built with, and where to see it.

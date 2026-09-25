@@ -46,8 +46,9 @@ installed (§9), and the user picked **Vite + React Three Fiber** (§10).
 10. **← YOU ARE HERE. Two things hold the site back, neither is code:**
     - **Both other project repos are private**, so two of three cards have no link at all.
       Making `thompmic/soccer-star-styles` public is the single highest-value change left.
-    - **No loading state.** The 643 KB glb streams in behind `Suspense fallback={null}`, so
-      the hero pops. The LCP poster idea in §5 is still the fix.
+    - ~~**No loading state.**~~ ✅ **Fixed 2026-09-24 — a splash screen (§12.10).**
+      Not the LCP poster §5 proposed: that poster is @Bachynskyi_ui's render and is
+      gitignored, so shipping it would both break a clean build and republish his artwork.
 
 ### Do not redo this work
 - The `.fig` is already fully decoded → `design-reference/figma-canvas.json`. Don't re-decode.
@@ -472,7 +473,10 @@ Lights and cameras (we light and frame in Three.js — values are in `hero.meta.
 ### Other 3D assets
 - `laptop.mp4` (12 MB) — pre-rendered animation. `ffprobe` still not installed so
   resolution/duration are unknown. Useful as a poster/fallback and as motion reference.
-- `hero-shattered-sphere-3200x2000.png` — a still from this scene. **Use it as the LCP poster
+⚠️ **Do not.** This file is gitignored (§2): it is @Bachynskyi_ui's render, it is absent from a
+clean checkout, and shipping it would republish his artwork. The loading state was solved
+with a splash instead (§12.10).
+- `hero-shattered-sphere-3200x2000.png` — a still from this scene. ~~**Use it as the LCP poster
   behind the canvas** so the hero paints instantly while the `.glb` streams in.
 
 ---
@@ -611,6 +615,15 @@ shard problem is solved at *export* (§5), not by the framework.
   driven by scroll, the frosted rail, three scroll sections. Three real bugs found and fixed by
   verification — the `_SHARDC` coordinate space, the `core002` node-name collision, and the
   spin-matrix basis change (**§12.2**). **Not yet judged by eye** — see §12.4. Still no `git init`.
+- **2026-09-24 (splash)** — **The hero no longer pops out of an empty card.** A blurred
+  831-byte LQIP poster was built first and rejected on looks; replaced by a full-page
+  splash — greeting, one of 18 quotes at random, and a 610-byte 4-frame pixel mascot
+  hammering (§12.10). Skippable, floor of 1.6s so the quote is readable, ceiling of 9s so a
+  failed model load can never seal the site shut. Also corrected a batch of stale
+  documentation: the model has been 643 KB / 65,267 tris since §12.8, not 1.13 MB /
+  112,883; `scroll.progress` has been `scroll.value` since §12.6; and §12.5 claimed mobile
+  was untouched while §13.3 said it was done (§13.3 was right).
+
 - **2026-08-16 (live)** — **Deployed to
   [michaelthompsondev.netlify.app](https://michaelthompsondev.netlify.app/)** and verified on
   the live host. All copy written: About and Interests from the user's own four interests,
@@ -861,14 +874,63 @@ reads the page.
 the icon scrim but still visible. Not removed — trimming it would mean cropping the
 frame, which the brief explicitly ruled out.
 
+### 12.10 The splash (2026-09-24)
+
+The hero used to appear out of an empty card. Nothing 3D can paint until ~1.1 MB of
+engine plus model has downloaded, Draco-decoded and compiled its shaders, and for all
+of that the card was blank — which reads as a broken page, not as a load.
+
+**A blurred poster was tried first and rejected.** A 40x21 JPEG of `og.png` inlined and
+blurred back up, 831 bytes. It worked, and it looked like a smear. The replacement is a
+splash: full page, a greeting, one of 18 quotes picked at random, and a pixel character
+hammering away underneath.
+
+**The quotes live in `content.js`** like every other string. Keep them short — the whole
+screen is up for about two seconds, and a quote nobody finishes is just a delay.
+
+**Three numbers, all in `config.js` as `SPLASH`:**
+
+| | |
+|---|---|
+| `minMs` 1600 | a FLOOR. On a warm cache `ready` fires in ~200ms and the quote is gone before it is read. Without this the splash is pointless |
+| `maxMs` 9000 | a CEILING. `ready` comes from the model decoding, so a 404 or a refused WebGL context would otherwise seal the site shut. **A loading overlay must never be able to become a wall** |
+| `fadeMs` 620 | the lift, and how long the node lingers before it is unmounted |
+
+`fadeMs` reaches the CSS as an inline custom property rather than being written out
+twice — `config.js` stays the one place it is set.
+
+**The character is a 4-frame pixel sprite, 610 bytes, inlined.** Pixel art rather than
+reusing the rail clip, for three reasons: the clip is 152 KB and a loading animation
+that competes for bandwidth with the 658 KB model it is covering for is self-defeating;
+it carries a KlingAI watermark that is tolerable in a 248px rail card and is not
+tolerable full-screen; and it shows the character sitting down to code over six seconds,
+which cannot read inside a two-second window. `tools/make_splash_sprite.py` regenerates
+the sheet — the frames are character maps, so they stay editable by hand.
+
+⚠️ **Two traps, both of which compile clean and only show up on screen:**
+
+1. **Sprite frames must be stepped in PIXELS, not percentages.** A percentage
+   `background-position` aligns the image's right edge with the box's right edge, so
+   `steps(4)` lands between frames and the sprite shivers.
+2. **A CSS escape written through a shell heredoc can become an octal escape.**
+   `content: '\201C'` had one backslash eaten on the way to the file, so Python read
+   `\201` as octal — emitting U+0081, an invisible control character, followed by a
+   literal `C`. The curly quotes rendered as a tofu box and the letters C and D. **The
+   build cannot catch this**: a control character is perfectly valid inside a CSS string.
+   It was caught by looking at the page. Both quote marks are now literal characters.
+
+**What it does not do:** it hides the wait, it does not shorten it. The JS parse and the
+Draco decode are exactly as they were. If the load itself ever needs to get faster, that
+is where to go — see §12.8.
+
 ### 12.5 Known gaps
 
 - **Mobile has never been looked at on a real phone.** It is *built*, not untouched — §13.3:
   hamburger nav, rail hidden (and its assets not even fetched under 901px), no horizontal
   overflow at 375px. But the ⚠️ at the end of §13.3 applies: nobody has seen how it *looks*,
   and the 3D hero still runs full-bleed on a phone GPU. That is the open question, not the CSS.
-- **No loading state.** The 643 KB glb streams in behind a `Suspense fallback={null}`, so the
-  hero pops. §5 suggests `hero-shattered-sphere-3200x2000.png` as an LCP poster — still worth doing.
+- ~~**No loading state.**~~ Solved by the splash (§12.10). What remains is that the splash
+  hides the wait rather than shortening it — the JS parse and the Draco decode are untouched.
 - **The wire cage is 15,872 tris** — §12.8 cut it from 63,488, so it is now ~24% of the scene
   rather than over half. The 44,471-tri shard shell is the floor.
 - **No `laptop.mp4`, duck/petals or brain imagery** — optional per §7, and none of them earned

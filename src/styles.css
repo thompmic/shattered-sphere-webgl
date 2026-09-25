@@ -125,7 +125,7 @@ a {
 
 /* The canvas fades in once the model is decoded (App sets data-ready). Without
    this the scene appears in one frame, which reads as a glitch rather than as a
-   load. The CSS nebula underneath is what the visitor sees until then. */
+   load. The splash sits over the top of all of it until then. */
 .stage-canvas {
   position: absolute;
   inset: 0;
@@ -690,6 +690,166 @@ a {
 
 .site-footer a:hover {
   color: var(--ink-dim);
+}
+
+/* ── Splash ────────────────────────────────────────────────────────────
+
+   Sits over everything while the scene loads. Same dark ground and the same
+   −4% tracking as the rest of the site, so it reads as the site arriving
+   rather than as a third-party loader bolted on the front.
+
+   An element at `opacity: 0` is still hit-testable and still in the
+   accessibility tree, so fading alone would leave an invisible sheet over the
+   whole page. `pointer-events: none` kills the clicks immediately, `visibility`
+   flips after the fade to take it out of the a11y tree, and Splash.jsx unmounts
+   it a beat later so none of it lingers at all.
+
+   The fade duration comes from SPLASH.fadeMs via an inline custom property —
+   config.js stays the one place it is set. */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gutter);
+  background:
+    radial-gradient(64% 48% at 50% 54%, rgba(139, 0, 0, 0.42) 0%, transparent 72%),
+    radial-gradient(90% 60% at 50% 100%, rgba(42, 14, 24, 0.7) 0%, transparent 70%),
+    var(--space-0);
+  opacity: 1;
+  transition: opacity var(--splash-fade, 620ms) ease, visibility 0s linear 0s;
+}
+
+.splash[data-lifting='true'] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--splash-fade, 620ms) ease,
+    visibility 0s linear var(--splash-fade, 620ms);
+}
+
+.splash-inner {
+  max-width: 640px;
+  text-align: center;
+}
+
+.splash-greeting {
+  margin: 0 0 26px;
+  font-size: clamp(30px, 5vw, 46px);
+  font-weight: 600;
+  letter-spacing: var(--tracking);
+  color: var(--ink);
+}
+
+.splash-quote {
+  margin: 0 0 34px;
+  /* the quotes vary a lot in length; reserving height stops the block jumping
+     between a one-liner and a three-liner on different loads */
+  min-height: 4.6em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.splash-quote p {
+  margin: 0;
+  font-size: clamp(15px, 2.1vw, 19px);
+  line-height: 1.55;
+  color: var(--ink-dim);
+}
+
+.splash-quote p::before {
+  content: '“';
+}
+
+.splash-quote p::after {
+  content: '”';
+}
+
+.splash-quote cite {
+  display: block;
+  margin-top: 12px;
+  font-size: 13px;
+  font-style: normal;
+  color: var(--ink-faint);
+}
+
+.splash-quote cite::before {
+  content: '— ';
+}
+
+.splash-sub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* The build loop.
+
+   A 4-frame pixel sprite, 610 bytes, inlined so it costs no request. Pixel art
+   rather than video on purpose: the clip in the rail is 152 KB, and a loading
+   animation that competes for bandwidth with the 658 KB model it is covering
+   for is self-defeating.
+
+   Frames are stepped by background-position in PIXELS, not percentages — a
+   percentage position aligns the image's right edge with the box's right edge,
+   so steps() lands between frames and the sprite shivers. The sheet is 4 frames
+   of 26px, drawn at 3x.
+
+   prefers-reduced-motion cancels the animation and parks it on frame 0, which
+   is a complete pose (hammer raised) rather than a half-swing.
+
+   tools/make_splash_sprite.py regenerates it. The frames are character maps in
+   that file, so they stay editable by hand. */
+.splash-builder {
+  display: block;
+  width: 78px;   /* 26px frame at 3x */
+  height: 72px;  /* 24px frame at 3x */
+  margin: 0 auto 18px;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGgAAAAYCAYAAAAWPrhgAAACKUlEQVR42u2aP0gCURzHf09ubIgIbEnCoKnBSWhocRBxcuuGchCxiNYg5EaHqEYRg4iwAkenEIeWmpocnKLEPxAVIQ7tr+nkPO/P+7077U7eFwTf38/9/L37vd97CCDkaRGjytDyBrUa1Pt5JW7ABcdeASyEtY8bcwiOzkGYCZwYJTgcDqL5Cu3mFOaB3ZwCNF9BGyU4OI6kLfR7HQAAuDoIWw7KltvQ73VgNbTGteIEh50j6SvsIKM+nfG6au1xbFXIqRixnYODg5XfOQGzhnSxBeliy7TslgSH00FC3pBk1lA52rQs6yWnYqSUidLD6xdUro/l8MqvHKJPAfWxNFtuG8bYbLk9dvAqZaIUAIDFQU44mP3OKQeTOk/LHmnypBumLJufFtJQEvTtYwCsbw8vB6t54Di+6mkoCQoAEC/UyayuRrAZo9eveqzsmRgQqd8yHaKaiT3ixDkYjv5NZQ2lvBweTcseYgd5er8EAIDt9f2JwWfP9645x46jChNK58EeyzRbhei/q+Ixhoej5WGzRCynoSSoGhm8YI+lg7TeN1oJbsmOEy/UiRuLgYWj3Re0n/+yh/gpZs+CQ7+qlARlonfKztY3kKBMZm2PYeeT3aYl7PQu4kpo8xpHdY5ZZqVtn5U9EmZCswcYppKG9Yu1B6YH8gpH/fGHqSSFm4sJtpVzpmWPuIsDn/0n4XfwOfLqwtIKYWk7BzBcCccmIVRw+DlCQkIY/QGGuyWS8FOyGQAAAABJRU5ErkJggg==') 0 0 / 312px 72px no-repeat;
+  image-rendering: pixelated;
+  animation: splash-build 0.72s steps(4) infinite;
+}
+
+@keyframes splash-build {
+  to {
+    background-position-x: -312px;
+  }
+}
+
+.splash-skip {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--gutter);
+  padding: 9px 18px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: var(--glass);
+  color: var(--ink-dim);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: var(--tracking);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.splash-skip:hover {
+  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+@media (max-width: 520px) {
+  .splash-quote {
+    min-height: 6.4em;
+  }
 }
 
 /* ── Dev-only TODO chip ───────────────────────────────────────────────────── */
