@@ -979,6 +979,57 @@ swap point, not a page number — with `replaceWith` on top of it for filter cha
 - `contact.resume` is set: `public/michael-thompson-cv.pdf`. Only `public/draco/` and
   `public/models/` are gitignored, so that file is committed and ships.
 
+### 12.12 Deep links to a project (2026-10-31)
+
+`#work/<slug>` opens the deck on the page holding that project, flashes the card
+once, and scrolls to it. `src/ui/deepLink.js` owns the parsing; `WorkDeck` applies
+it on mount and on `hashchange`.
+
+**The shape is a sub-path of the existing section anchor, not a new scheme.**
+`#work` already scrolls to the section through Lenis, so `#work/anything` degrades
+to the same place when the slug is unknown — a link saved before a rename lands on
+Work instead of doing nothing.
+
+**Slugs are written out in `content.js`, not derived from the title.** A slug is a
+public URL. Deriving it means renaming a project silently breaks every link anyone
+saved.
+
+**Nothing writes the hash on its own.** Paging and filtering deliberately do *not*
+update the URL: the nav owns `#about`, `#skills` and friends, and rewriting the
+hash on every page turn would both fight that and fill the back button with deck
+states nobody asked to navigate to. The hash changes only when someone clicks a
+card's permalink, and then through `history.replaceState` — `location.hash = …`
+pushes, so three permalink clicks would mean three presses of Back to leave.
+
+**Two ordering traps:**
+
+- The scroll is deferred one `requestAnimationFrame`. Child effects run before the
+  parent's, so when `WorkDeck`'s effect fires, `App` has not yet started Lenis or
+  run its `window.scrollTo(0, 0)` — scrolling there is immediately undone.
+- Arrival uses `jumpTo`, not `goTo`. A deep link should land on the right page
+  already showing, not play a drop-and-replace of cards the visitor never saw.
+
+**A cascade trap in the highlight.** `.project[data-highlighted]` is scoped to
+`[data-phase='idle']`. `.project[data-phase='in']` sets `opacity: 0` and relies on
+`deck-slide` to bring it back; the highlight rule is later in the file, so
+unscoped it would claim the animation channel mid-transition and strand the card
+invisible.
+
+**Also:** the permalink is revealed on hover/focus-within, with an
+`@media (hover: none)` override — a touch device never fires `:hover`, so without
+it the control is unreachable on every phone.
+
+**Measured, not assumed:** `#work/squadup` from a cold load scrolls to y=1250 by
+~800ms, well before the splash lifts at ~7.6s. The same trace shows a ~5.7s
+main-thread block between 1.4s and 7.1s where `setTimeout` callbacks cannot run —
+that is the JS parse plus Draco decode from §12.8, now observed directly rather
+than inferred.
+
+**Work intro.** `intro` holds `{count}`, substituted in `Sections.jsx` with the
+real project count and spelled out up to twenty. It was hardcoded "Thirteen
+things I have built", which would have quietly lied the moment a fourteenth
+project was added.
+
 **Accessibility.** The tabs are a real tablist — roving `tabIndex`, arrow keys,
 Home/End, focus follows selection. The pager is plain buttons with `aria-current` on
 the active dot. A visually-hidden `role="status"` announces "Page 2 of 5. Showing 3 of

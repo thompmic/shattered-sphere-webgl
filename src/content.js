@@ -105,7 +105,10 @@ export const content = {
   // no link — see the private-repo note on each one.
   work: {
     title: 'Selected Work',
-    intro: 'Thirteen things I have built. Pick a lane, or page through all of them.',
+    // `{count}` is substituted with the number of projects actually in the deck,
+    // so adding a fourteenth cannot leave the intro quietly claiming thirteen.
+    // It is still a string in this file — only the number is derived.
+    intro: '{count} things I have built. Pick a lane, or page through all of them.',
 
     // The tab row. `all` must stay first — the deck opens on it.
     filters: [
@@ -126,6 +129,7 @@ export const content = {
         year: '2026',
         category: 'realtime',
         title: 'Shattered Sphere',
+        slug: 'shattered-sphere', // public URL fragment — do not change once shared
         summary:
           'A WebGL hero rendering 700 fracture shards in a single draw call. The shatter is a vertex shader derived from the original Blender geometry-node graph, driven by scroll.',
         role: 'Design engineering, shader work, Blender → glTF pipeline',
@@ -140,6 +144,7 @@ export const content = {
         year: '2026',
         category: 'realtime',
         title: 'SquadUp',
+        slug: 'squadup', // public URL fragment — do not change once shared
         summary:
           'Real-time pickup football lineups. One person makes a room, texts four characters to the group chat, and everyone watches the formation fill up live — no accounts, nothing to install. The formation board, the who-is-here list and the room chat all update on every screen at once.',
         role:
@@ -155,20 +160,22 @@ export const content = {
         year: '2026',
         category: 'realtime',
         title: 'Grandmaster Arena',
+        slug: 'grandmaster-arena', // public URL fragment — do not change once shared
         summary:
           'A two-player chess duel staged in a 3D colosseum, with a crowd. The Node server owns every room and validates every move — castling, en passant and promotion included — then broadcasts the board and timestamped cinematic events to players and spectators alike. Spectators cheer or boo into a shared hype level that the arena reacts to.',
         role:
           'Solo build. Server-authoritative game state, the Three.js arena and champions built from primitives rather than imported models, optional five- and ten-minute clocks, a spectator camera seat, and voice commentary that honours the operating system reduced-motion setting.',
         stack: ['Node.js', 'Express', 'Socket.IO', 'chess.js', 'Three.js'],
-        // ⚠️ github.com/thompmic/grandmaster-arena is PRIVATE, and the Render
-        // service in render.yaml is not deployed — grandmaster-arena.onrender.com
-        // returned 404 on 2026-10-31. Add a Live link once it is up.
-        links: [],
+        // The repo is PRIVATE, so no Code link. Deployed to Render and verified
+        // 200 on 2026-10-31. ⚠️ Render's free tier sleeps after 15 minutes idle,
+        // so the first visit after a quiet spell can take about a minute to wake.
+        links: [{ label: 'Live', href: 'https://grandmaster-arena-otyb.onrender.com/' }],
       },
       {
         year: '2026',
         category: 'systems',
         title: 'Prime — AI personal assistant',
+        slug: 'prime', // public URL fragment — do not change once shared
         summary:
           'A personal assistant that triages about a hundred emails a run across Outlook and Gmail, pulls out deadlines, ranks job postings and drafts the replies. Nothing is ever sent without an approval record: the human-in-the-loop step is enforced in code, not by convention.',
         role:
@@ -182,6 +189,7 @@ export const content = {
         year: '2026',
         category: 'mobile',
         title: 'Hatelife',
+        slug: 'hatelife', // public URL fragment — do not change once shared
         summary:
           'A venting app built on the shape of a focus timer: you weather a storm instead of growing a tree, and the reward for sitting through it is finding out that somebody had a worse day than you. A snow-globe home screen, a public feed, a rain jar that fills as you let things out, and rooms that unlock as you keep going.',
         role:
@@ -195,6 +203,7 @@ export const content = {
         year: '2026',
         category: 'realtime',
         title: 'The Watchers',
+        slug: 'the-watchers', // public URL fragment — do not change once shared
         summary:
           'A browser-based simulation of a stylized city — a real-time world you can zoom into and inspect. It started as backend scaffolding and has since grown a body: a low-poly city, a road system generated from the city\'s own geometry, and its own NPC model driving around it.',
         role:
@@ -208,6 +217,7 @@ export const content = {
         year: '2026',
         category: 'mobile',
         title: 'Soccer Star Styles',
+        slug: 'soccer-star-styles', // public URL fragment — do not change once shared
         summary:
           'People bring reference photos to the barber, but hairstyle inspiration for football fans is scattered across image searches and social posts. A cross-platform mobile app cataloguing professional players\' hairstyles year by year, each cut shown with a spec sheet (fade level, length, colour) and a "show your barber" checklist.',
         role:
@@ -220,6 +230,7 @@ export const content = {
         year: '2026',
         category: 'web',
         title: 'Talk to the Devil',
+        slug: 'talk-to-the-devil', // public URL fragment — do not change once shared
         summary:
           'A conversation with something that has no interest in being helpful. The entry is the whole idea: an apocalyptic painting fades up with an invented scripture line under it, the gates open, the page burns away, and then you are in the chat.',
         role:
@@ -235,6 +246,7 @@ export const content = {
         year: '2026',
         category: 'systems',
         title: 'Job Hunter',
+        slug: 'job-hunter', // public URL fragment — do not change once shared
         summary:
           'An agent pipeline that goes looking for work. It scrapes listings, reads the resumes you give it, and tailors a new one per posting — with a dashboard over the top and profiles so more than one person can use it.',
         role:
@@ -247,6 +259,7 @@ export const content = {
         year: '2026',
         category: 'systems',
         title: 'Optimize Disk',
+        slug: 'optimize-disk', // public URL fragment — do not change once shared
         summary:
           'A disk cleanup tool built around the thing most PC cleaners get wrong: on a nearly-full drive the temp-file junk is a rounding error. It measures first, cleans only what is always safe automatically, then helps you find the real culprits and remove them deliberately — size preview, typed confirmation, Recycle Bin rather than a permanent delete.',
         role:
@@ -261,6 +274,7 @@ export const content = {
         year: '2026',
         category: 'systems',
         title: 'Flighting Budget Solver',
+        slug: 'flighting-budget-solver', // public URL fragment — do not change once shared
         summary:
           'A single-file web app that solves a campaign budget to the exact dollar — the kind of arithmetic that usually gets fought with in a spreadsheet until it is close enough.',
         role: 'Solo build. One HTML file, no build step, no dependencies.',
@@ -271,6 +285,7 @@ export const content = {
         year: '2026',
         category: 'web',
         title: 'Reelo',
+        slug: 'reelo', // public URL fragment — do not change once shared
         summary:
           'A movie and TV browsing site — TMDB for the catalogue data, an embedded player for playback.',
         role: 'Solo build.',
@@ -287,6 +302,7 @@ export const content = {
         year: '2026',
         category: 'web',
         title: 'Inherit Love',
+        slug: 'inherit-love', // public URL fragment — do not change once shared
         todo: true,
         summary:
           'A single-page storefront: a featured-products section and a templated product detail view, built on a packaged design system with its own photography and a looping reel.',

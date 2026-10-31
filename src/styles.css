@@ -723,10 +723,87 @@ a {
   font-weight: 600;
 }
 
+.project-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
 .project-year {
   font-size: 12px;
   color: var(--ink-faint);
   white-space: nowrap;
+}
+
+/* ── Per-project permalink ────────────────────────────────────────────────── */
+/*
+ * Hidden until the card is hovered or something inside it is focused, so
+ * thirteen chain icons do not compete with thirteen project titles. It stays
+ * visible whenever it HAS focus, or a keyboard user would tab to an invisible
+ * control — that is the whole reason this is not just `opacity: 0` on hover.
+ */
+.project-permalink {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-faint);
+  opacity: 0;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.project:hover .project-permalink,
+.project:focus-within .project-permalink,
+.project-permalink:focus-visible {
+  opacity: 1;
+}
+
+.project-permalink:hover {
+  color: var(--accent);
+}
+
+/* A touch device never fires :hover, so the reveal-on-hover rule above would
+   hide the permalink permanently on every phone and tablet. Show it outright
+   there — the icon is small and the alternative is a control nobody can reach. */
+@media (hover: none) {
+  .project-permalink {
+    opacity: 1;
+  }
+}
+
+/* ── Arrival highlight ────────────────────────────────────────────────────── */
+/*
+ * One pulse when a #work/<slug> link lands on a card, then it settles to a
+ * steady accent border. Enough to answer "which one did I just open?" without
+ * reading as a permanent selected state — any page or filter change clears it.
+ */
+@keyframes project-arrive {
+  0% {
+    box-shadow: 0 0 0 0 rgba(240, 80, 74, 0);
+  }
+  35% {
+    box-shadow: 0 0 0 4px rgba(240, 80, 74, 0.28);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(240, 80, 74, 0);
+  }
+}
+
+/* Scoped to the idle phase on purpose. `.project[data-phase='in']` sets
+   `opacity: 0` and relies on deck-slide to bring it back; this rule is later in
+   the cascade, so letting it claim the animation channel during a transition
+   would replace deck-slide and strand the card invisible. */
+.project[data-highlighted][data-phase='idle'] {
+  border-color: rgba(240, 80, 74, 0.55);
+  animation: project-arrive 1.6s ease-out 1;
+}
+
+.project[data-highlighted] {
+  border-color: rgba(240, 80, 74, 0.55);
+}
+
+.project[data-highlighted] .project-permalink {
+  opacity: 1;
+  color: var(--accent);
 }
 
 .project-summary {

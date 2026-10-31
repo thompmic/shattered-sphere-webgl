@@ -94,6 +94,19 @@ export function useCardDeck({ pageCount }) {
   )
 
   /**
+   * Go straight to a page with no animation and no height pinning.
+   *
+   * For *arriving* rather than navigating: a `#work/<slug>` deep link should
+   * land on the right page already showing, not play a drop-and-replace of
+   * cards the visitor never saw.
+   */
+  const jumpTo = useCallback((next) => {
+    clearTimer()
+    setPhase('idle')
+    setPage(Math.max(0, next))
+  }, [])
+
+  /**
    * For changes that replace the whole deck rather than page within it — i.e.
    * the filter. Resets to page one as part of the same swap.
    *
@@ -158,7 +171,7 @@ export function useCardDeck({ pageCount }) {
     [reduced],
   )
 
-  return { page, phase, goTo, replaceWith, containerRef, delayFor, reduced }
+  return { page, phase, goTo, jumpTo, replaceWith, containerRef, delayFor, reduced }
 }
 
 /**

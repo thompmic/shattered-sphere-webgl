@@ -30,12 +30,47 @@ function SectionHeading({ index, title, intro, introTodo }) {
   )
 }
 
+/**
+ * "Thirteen things I have built" was hardcoded, which meant adding a fourteenth
+ * project left the intro quietly lying. The words still live in content.js; only
+ * the number is derived, and it is spelled out up to twenty because a sentence
+ * should not open with a numeral.
+ */
+const NUMBER_WORDS = [
+  'No',
+  'One',
+  'Two',
+  'Three',
+  'Four',
+  'Five',
+  'Six',
+  'Seven',
+  'Eight',
+  'Nine',
+  'Ten',
+  'Eleven',
+  'Twelve',
+  'Thirteen',
+  'Fourteen',
+  'Fifteen',
+  'Sixteen',
+  'Seventeen',
+  'Eighteen',
+  'Nineteen',
+  'Twenty',
+]
+
+function spellCount(n) {
+  return NUMBER_WORDS[n] ?? String(n)
+}
+
 function Work({ index }) {
   const { work } = content
+  const intro = work.intro?.replace('{count}', spellCount(work.projects.length))
   return (
     <section id="work" className="sec">
       <div className="panel">
-        <SectionHeading index={index} title={work.title} intro={work.intro} introTodo={work.introTodo} />
+        <SectionHeading index={index} title={work.title} intro={intro} introTodo={work.introTodo} />
         <WorkDeck />
       </div>
     </section>
