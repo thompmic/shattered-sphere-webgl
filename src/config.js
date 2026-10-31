@@ -129,6 +129,28 @@ export const SPLASH = {
   fadeMs: 620,
 }
 
+// ── Work deck ─────────────────────────────────────────────────────────────────
+// All TASTE. The work section is a paged deck (src/ui/WorkDeck.jsx): the outgoing
+// cards tip and fall, the incoming ones slide in from the right.
+//
+// The three timings interact, so change them together. The total cost of one page
+// turn is roughly:  dropMs + stagger*(perPage-1) + slideMs + stagger*(perPage-1)
+// which at these values is about 1.1s. Past ~1.4s the deck starts to feel like it
+// is making you wait, which is the exact problem the deck was built to solve.
+//
+// Under `prefers-reduced-motion: reduce` every duration here is ignored and the
+// swap is instant — see `useCardDeck`.
+export const DECK = {
+  perPage: 3, // cards on screen at once. Three rows fit a full summary each.
+  dropMs: 420, // how long a card takes to fall out
+  slideMs: 460, // how long a card takes to slide in
+  stagger: 70, // delay between consecutive cards, in or out
+  // The container animates between the old and new page heights over this long,
+  // because consecutive pages are rarely the same height and an un-animated jump
+  // throws the whole page down by 100px mid-transition.
+  heightMs: 420,
+}
+
 // ── Scroll ────────────────────────────────────────────────────────────────────
 export const SCROLL = {
   lerp: 0.075, // Lenis: how hard it smooths the page scroll itself

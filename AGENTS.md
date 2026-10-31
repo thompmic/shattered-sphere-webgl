@@ -923,6 +923,75 @@ the sheet — the frames are character maps, so they stay editable by hand.
 Draco decode are exactly as they were. If the load itself ever needs to get faster, that
 is where to go — see §12.8.
 
+### 12.11 The work deck (2026-10-31)
+
+Work went from 3 projects to **13**, which broke the layout it was in. Thirteen cards
+stacked vertically is roughly six screens of scrolling inside one section, and the
+projects at the bottom are the ones nobody reaches.
+
+So `work` is no longer a list. It is a **deck**: three cards in a fixed slot, paged,
+with filter tabs across the top. The section is now a constant height no matter how
+much work is added to `content.js` — appending a project costs nothing in page length.
+
+**Files.** `src/ui/WorkDeck.jsx` (markup, tabs, pager) and `src/ui/useCardDeck.js`
+(the state machine). Split because the imperative height handling is the complicated
+part and does not belong next to JSX. Timings live in `config.js` as `DECK`, all TASTE.
+
+**The transition is three steps, not one.** `out` → swap → `in`:
+
+1. `out` — the cards on screen tip and fall, staggered by `DECK.stagger`.
+2. swap — the page (or filter) changes. The only moment the DOM content changes,
+   and nothing is visible while it happens.
+3. `in` — the new cards slide in from the right, staggered.
+
+Exits and entrances are deliberately **not** mirror images: a card falls down and
+tips as it goes, its replacement is dealt in from the side.
+
+**Height is handled separately, and it is the part that bites.** During `out` the
+cards only *transform*, so they keep their layout boxes and the container height is
+stable. The instant the content swaps, the natural height changes — pages of three
+long summaries and three short ones differ by 200px or more — and everything below
+the deck jerks. So `useCardDeck` pins the measured height before the swap and animates
+it to the new `scrollHeight` during `in`, in a `useLayoutEffect` (the only point where
+the new content is in the DOM but unpainted). It takes **two** `requestAnimationFrame`s
+to start that transition; with one the height snaps, because the pin and the target
+get coalesced into a single style recalculation.
+
+**Trap — a no-op `goTo` silently skipped the animation.** Filter changes were first
+routed through `goTo(0)`, which early-returns when the requested page equals the
+current one. Since you are usually already on page one, clicking a tab swapped the
+cards instantly with no animation at all, while paging animated correctly. The build
+was green and the pager looked right; it was only caught by sampling
+`getComputedStyle(card).animationName` during the transition. Fixed by generalising
+the cycle into `transition(apply)` — the change to make is a *callback* applied at the
+swap point, not a page number — with `replaceWith` on top of it for filter changes.
+
+**Also fixed in the same pass:**
+
+- **The fixed nav printed over the scrolling panels.** `.chrome` is `z-index: 3` and
+  `.scroller` is `z-index: 2`, and the fade at §12.x releases `.rail`, `.hero-intro`
+  and `.hero-foot` but deliberately *not* `.nav` — you need to navigate from anywhere.
+  With no background, the wordmark landed across the Work intro and the project titles.
+  `.nav` now takes a scrim when `data-scrolled='true'` and drops the role line, turning
+  it into a compact bar.
+- **Section numbers were hardcoded** `"01"`–`"05"` in five places. Derived from the
+  `SECTIONS` array order now.
+- `contact.resume` is set: `public/michael-thompson-cv.pdf`. Only `public/draco/` and
+  `public/models/` are gitignored, so that file is committed and ships.
+
+**Accessibility.** The tabs are a real tablist — roving `tabIndex`, arrow keys,
+Home/End, focus follows selection. The pager is plain buttons with `aria-current` on
+the active dot. A visually-hidden `role="status"` announces "Page 2 of 5. Showing 3 of
+13 projects." because otherwise paging is completely silent: focus stays on the same
+button while everything behind it changes. Under `prefers-reduced-motion: reduce` the
+hook swaps instantly and never sets a phase — the global duration override in
+`styles.css` would otherwise fire the animation and the JS timings would desync from it.
+
+**Verified in the browser, not just built** (§12.10, §13 — a green build is not
+evidence): all five pages cycled, all five filters, phases and per-card
+`animationName`/`animationDelay`/`opacity` sampled through a full cycle, height pinned
+at 837px → animated to 901px → released to `auto`, no console errors.
+
 ### 12.5 Known gaps
 
 - **Mobile has never been looked at on a real phone.** It is *built*, not untouched — §13.3:
@@ -1058,12 +1127,29 @@ Then, separately, list:
 anything past two sentences gets skimmed and wastes the slot. And `role` is the field
 recruiters actually read — "what I did" beats "what the project was" every time.
 
-### 13.4 The one hard blocker
+### 13.4 The one hard blocker — ✅ largely cleared 2026-10-31
 
 **Real content.** Everything above is scaffolding around facts only the user has: his name and
 title, the actual projects, the LinkedIn URL, which socials, what interests. Do **not** invent
 these — a portfolio with fabricated projects is worse than no portfolio. Ask for them, or build
 the structure with clearly-marked `TODO` placeholders and hand it back for filling in.
+
+**Status 2026-10-31.** Thirteen projects are in `content.js` (§12.11), recovered by reading all
+13 Claude Code transcript directories on this machine and then verifying every claim against a
+primary source — the GitHub API, a live HTTP request, or the repo on disk. The provenance of
+each figure is in a comment above it. **Re-check before changing one**; several were already
+stale when found (The Watchers was described as "16 commits, April 2026" when it is 18 across
+April *and* August, and the August work added a low-poly city the card did not mention).
+
+Where this leaves the rule: the standing ban on inventing projects, dates, employers and
+metrics is unchanged, and one card — **Inherit Love** — is still `todo: true` because the repo
+alone does not say who it was for or whether it shipped. It renders with the amber chip in dev
+and a dashed border in production until the user writes it.
+
+Still only the user's to supply: screenshots or loops for the cards (there is no project
+imagery anywhere on the site yet), and whether "Creative Developer" is still the right title
+now that he is a Software Engineer Intern at DeepSpace. **Do not change the title on his
+behalf** — that is his own words about himself, and §7 covers it.
 
 Two open sub-questions: does **"Studio One.Zero"** survive as a brand, or does the site take his
 own name (§11.5)? And is the samurai-reference *structure* still the target once there are six

@@ -402,6 +402,34 @@ a {
   pointer-events: none;
 }
 
+/* The nav deliberately does NOT fade with the rest of the chrome — you need to be
+   able to navigate from anywhere on the page. But it is `position: fixed` at
+   z-index 3 and the panels scroll underneath it at z-index 2, so with no
+   background the wordmark and the links printed straight over the body copy:
+   "Michael Thompson / Creative Developer" landed across the Work intro and then
+   across the project titles. The scrim is what separates them.
+
+   The role line goes at the same time. It is hero dressing, and dropping it
+   turns a two-line block into a compact bar — less of the page covered. */
+.nav {
+  transition: background-color 0.35s ease, border-color 0.35s ease, padding 0.35s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.chrome[data-scrolled='true'] .nav {
+  background: rgba(9, 7, 13, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom-color: var(--glass-border);
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.chrome[data-scrolled='true'] .logo-word em {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
 .chrome .rail,
 .chrome .hero-intro,
 .chrome .hero-foot {
@@ -476,16 +504,185 @@ a {
   max-width: 62ch;
 }
 
-/* ── Work ─────────────────────────────────────────────────────────────────── */
+/* ── Work deck ────────────────────────────────────────────────────────────── */
+/*
+ * Thirteen projects as one list is six screens of scrolling and nobody reaches
+ * the end. The deck shows three at a time in a fixed slot: the outgoing cards
+ * tip and fall, the new ones slide in. Timings live in config.js (DECK) and are
+ * mirrored here — if you change one, change both. They are duplicated rather
+ * than injected as custom properties because keyframe percentages cannot be
+ * driven from JS without recompiling the animation on every render.
+ */
 
-.projects {
+.deck-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 20px;
+  padding: 0 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.deck-tab {
+  appearance: none;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: var(--tracking);
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.deck-tab:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.deck-tab[aria-selected='true'] {
+  color: var(--ink);
+  background: rgba(240, 80, 74, 0.14);
+  border-color: rgba(240, 80, 74, 0.45);
+}
+
+/* The height of this element is animated imperatively by useCardDeck, so it must
+   not also be a flex child that could be stretched by a parent. */
+.deck-cards {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  overflow: hidden;
 }
+
+.deck-empty {
+  margin: 0;
+  padding: 28px 0;
+  font-size: 15px;
+  color: var(--ink-faint);
+}
+
+.deck-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.deck-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.deck-dot {
+  appearance: none;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--ink-faint);
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.deck-dot:hover {
+  border-color: var(--ink);
+}
+
+.deck-dot[data-active] {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.25);
+}
+
+.deck-arrows {
+  display: flex;
+  gap: 8px;
+}
+
+.deck-arrow {
+  appearance: none;
+  background: none;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  padding: 7px 15px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: var(--tracking);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.deck-arrow:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(240, 80, 74, 0.12);
+}
+
+.deck-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ── The drop and the slide ───────────────────────────────────────────────── */
+/*
+ * Two separate animations rather than one reversible transition, because the
+ * exits and the entrances are not mirror images: a card falls DOWN and tips as
+ * it goes (gravity), and the replacement arrives from the RIGHT (dealt in).
+ * Both use `forwards` so a card holds its last frame until the phase flips —
+ * without it, a dropped card snaps back to centre for one frame before unmount.
+ *
+ * `will-change` is set only while a phase is active. Left on permanently it
+ * promotes thirteen cards to their own compositor layers on a page that is
+ * already running a WebGL scene.
+ */
+@keyframes deck-drop {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(14px, 120px, 0) rotate(3.5deg);
+  }
+}
+
+@keyframes deck-slide {
+  from {
+    opacity: 0;
+    transform: translate3d(46px, 0, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.project[data-phase='out'] {
+  will-change: transform, opacity;
+  /* DECK.dropMs */
+  animation: deck-drop 420ms cubic-bezier(0.55, 0, 0.85, 0.35) forwards;
+}
+
+.project[data-phase='in'] {
+  will-change: transform, opacity;
+  opacity: 0;
+  /* DECK.slideMs */
+  animation: deck-slide 460ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Project card ─────────────────────────────────────────────────────────── */
 
 .project {
   padding: 22px;
@@ -495,9 +692,17 @@ a {
   transition: border-color 0.25s ease, transform 0.25s ease;
 }
 
+/* The hover lift uses the same transform channel as the drop animation. Without
+   this guard the two fight and a card being dealt in jumps 2px as the pointer
+   crosses it. */
 .project:hover {
   border-color: rgba(240, 80, 74, 0.4);
   transform: translateY(-2px);
+}
+
+.deck[data-phase='out'] .project:hover,
+.deck[data-phase='in'] .project:hover {
+  transform: none;
 }
 
 .project[data-todo] {
@@ -948,6 +1153,36 @@ a {
   .project-top {
     flex-direction: column;
     gap: 4px;
+  }
+
+  /* Dots and arrows side by side get about 90px each on a narrow phone and the
+     arrows wrap mid-word. Stack them and centre instead. */
+  .deck-pager {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .deck-arrows {
+    width: 100%;
+  }
+
+  .deck-arrow {
+    flex: 1;
+  }
+
+  /* Five pills on one line forces a two-character label. Let the row scroll. */
+  .deck-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .deck-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .deck-tab {
+    flex: 0 0 auto;
   }
 }
 
